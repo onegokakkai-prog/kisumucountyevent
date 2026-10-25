@@ -131,6 +131,7 @@ export const programme: FestivalDay[] = [
           { track: "Track 4", title: "Scholarship application & bursary desk" },
           { track: "Track 4", title: "Mobile EARC developmental screenings" },
           { track: "Tracks 5 & 6", title: "Mariatta Support Drive launch & “Little Explorers” Zone" },
+          { track: "Tracks 5 & 6", title: "3 Minute Thesis research symposium" },
         ],
       },
       {
@@ -318,6 +319,70 @@ export const subCounties = [
   "Nyakach",
   "Outside Kisumu County",
 ] as const;
+
+// Kisumu County's 35 electoral wards, by sub-county (IEBC).
+export const wards: Record<string, string[]> = {
+  "Kisumu Central": ["Railways", "Migosi", "Shaurimoyo Kaloleni", "Market Milimani", "Kondele", "Nyalenda B"],
+  "Kisumu East": ["Kajulu", "Kolwa East", "Manyatta B", "Nyalenda A", "Kolwa Central"],
+  "Kisumu West": ["South West Kisumu", "Central Kisumu", "Kisumu North", "West Kisumu", "North West Kisumu"],
+  Seme: ["West Seme", "Central Seme", "East Seme", "North Seme"],
+  Nyando: ["East Kano/Wawidhi", "Awasi/Onjiko", "Ahero", "Kabonyo/Kanyagwal", "Kobura"],
+  Muhoroni: ["Miwani", "Ombeyi", "Masogo/Nyang'oma", "Chemelil", "Muhoroni/Koru"],
+  Nyakach: ["South West Nyakach", "North Nyakach", "Central Nyakach", "West Nyakach", "South East Nyakach"],
+};
+
+// Asked instead of a ward when someone comes from outside Kisumu County. Lake Region
+// Economic Bloc counties first, then the rest.
+export const regions = [
+  "Siaya County",
+  "Homa Bay County",
+  "Migori County",
+  "Kisii County",
+  "Nyamira County",
+  "Kakamega County",
+  "Vihiga County",
+  "Busia County",
+  "Bungoma County",
+  "Kericho County",
+  "Bomet County",
+  "Nandi County",
+  "Trans Nzoia County",
+  "Nairobi County",
+  "Another county in Kenya",
+  "Uganda",
+  "Tanzania",
+  "Another country",
+] as const;
+
+export const genders = ["Female", "Male", "Prefer not to say"] as const;
+
+// Careers grouped by CBE Senior School pathway and track ("Group | Choice").
+export const careerOptions = [
+  "STEM · Pure Sciences | Medicine & health (doctor, nurse, clinical officer)",
+  "STEM · Pure Sciences | Pharmacy & laboratory science",
+  "STEM · Pure Sciences | Scientific research",
+  "STEM · Applied Sciences | Agriculture & agribusiness",
+  "STEM · Applied Sciences | Food science & nutrition",
+  "STEM · Applied Sciences | Environment & conservation",
+  "STEM · Technical & Engineering | Engineering",
+  "STEM · Technical & Engineering | ICT & software",
+  "STEM · Technical & Engineering | Construction & built environment",
+  "STEM · Career & Technology Studies | Mechanics & motor vehicle",
+  "STEM · Career & Technology Studies | Electrical & plumbing",
+  "STEM · Career & Technology Studies | Fashion, beauty & hairdressing",
+  "STEM · Career & Technology Studies | Hospitality & catering",
+  "Social Sciences · Languages & Literature | Media & journalism",
+  "Social Sciences · Languages & Literature | Languages & translation",
+  "Social Sciences · Humanities & Business Studies | Teaching & education",
+  "Social Sciences · Humanities & Business Studies | Business, finance & accounting",
+  "Social Sciences · Humanities & Business Studies | Law & governance",
+  "Social Sciences · Humanities & Business Studies | Public service & administration",
+  "Social Sciences · Humanities & Business Studies | Community & social work",
+  "Social Sciences · Humanities & Business Studies | Religion & ministry",
+  "Arts & Sports Science · Arts | Music, drama & film",
+  "Arts & Sports Science · Arts | Visual arts & design",
+  "Arts & Sports Science · Sports Science | Sports, coaching & fitness",
+];
 
 export const interests = [
   "Retired Teachers and Educators Awards",

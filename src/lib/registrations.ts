@@ -3,7 +3,9 @@ import { MongoServerError, type Collection } from "mongodb";
 import type { Registration } from "@/app/register/schema";
 import { getDb } from "./mongodb";
 
-export type StoredRegistration = Registration & { createdAt: Date };
+// Registrations made before these questions existed have no answers, gender, ward or region.
+type AddedLater = "answers" | "gender" | "ward" | "region";
+export type StoredRegistration = Omit<Registration, AddedLater> & Partial<Pick<Registration, AddedLater>> & { createdAt: Date };
 
 let indexesReady: Promise<unknown> | undefined;
 

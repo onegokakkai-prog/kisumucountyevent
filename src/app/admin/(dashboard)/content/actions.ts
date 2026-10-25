@@ -5,7 +5,8 @@ import { z } from "zod";
 import { requireAdmin } from "@/lib/admin-auth";
 import { defaultContent, resetContentSection, saveContentSection, type ContentSection } from "@/lib/content";
 import { createUploadUrl, uploadKinds, type UploadKind } from "@/lib/r2";
-import { sections, slotFields, type Field, type ItemField } from "./fields";
+import { choiceTypes } from "@/lib/form-questions";
+import { formSections, proSections, sections, slotFields, type Field, type ItemField } from "./fields";
 
 export type SaveState = { status: "idle" } | { status: "saved"; at: number } | { status: "error"; message: string; at: number };
 
@@ -46,7 +47,8 @@ function readList(raw: string, fields: ItemField[], max: number, itemName: strin
     for (const f of fields) {
       const v = (row[f.key] ?? "").trim();
       if (f.required && !v) throw new z.ZodError([{ code: "custom", path: [], message: `${itemName[0].toUpperCase()}${itemName.slice(1)} ${i + 1}: add the ${f.label.toLowerCase()}.` }]);
-      if (f.type === "lines") item[f.key] = readLines(v, 20);
+      if (f.type === "id") item[f.key] = /^[a-z0-9]{4,16}$/.test(v) ? v : Math.random().toString(36).slice(2, 10);
+      else if (f.type === "lines") item[f.key] = readLines(v, 40);
       else if (f.type === "sessions") item[f.key] = readSessions(v);
       else if (f.type === "image") item[f.key] = url.parse(v);
       else if (f.type === "select") item[f.key] = f.options?.some((o) => o.value === v) ? v : f.options?.[0]?.value;
@@ -71,8 +73,10 @@ function readField(field: Field, formData: FormData): unknown {
       const n = z.coerce.number({ error: `${field.label}: enter a number.` }).int().min(0, `${field.label}: can't be negative.`).parse(text || "0");
       return n;
     }
+    case "toggle":
+      return raw === "on";
     case "lines":
-      return readLines(text, 20).join("\n");
+      return readLines(text, 40).join("\n");
     case "photos":
       return photosSchema.parse(JSON.parse(text || "[]"));
     case "audio":
@@ -91,13 +95,15 @@ function readField(field: Field, formData: FormData): unknown {
 
 export async function saveSection(section: ContentSection, _prev: SaveState, formData: FormData): Promise<SaveState> {
   await requireAdmin();
-  const config = sections.find((s) => s.id === section);
+  const config = [...sections, ...formSections, ...proSections].find((s) => s.id === section);
   if (!config) return { status: "error", message: "Unknown section.", at: Date.now() };
 
   const value: Record<string, unknown> = {};
   try {
     for (const field of config.fields) value[field.key] = readField(field, formData);
     if (section === "voiceover") value.duration = z.string().max(10).parse(formData.get("duration") ?? "");
+    const problem = checkForm(section, value);
+    if (problem) return { status: "error", message: problem, at: Date.now() };
   } catch (err) {
     const message = err instanceof z.ZodError ? err.issues[0].message : "Some of the values couldn't be read.";
     return { status: "error", message, at: Date.now() };
@@ -111,6 +117,20 @@ export async function saveSection(section: ContentSection, _prev: SaveState, for
   }
   updateTag("content");
   return { status: "saved", at: Date.now() };
+}
+
+// Checks that keep the registration form usable.
+function checkForm(section: ContentSection, value: Record<string, unknown>): string | null {
+  if (section === "formOptions") {
+    if (!String(value.roles).trim()) return "Add at least one “coming as” choice.";
+    if (!String(value.day1).trim() || !String(value.day2).trim()) return "Both day options need a label.";
+  }
+  if (section === "formQuestions" || section === "proQuestions") {
+    const items = value.items as { label: string; type: string; options: string[] }[];
+    const missing = items.find((q) => choiceTypes.includes(q.type as never) && q.options.length === 0);
+    if (missing) return `“${missing.label}” needs at least one choice, one per line.`;
+  }
+  return null;
 }
 
 export async function resetSection(section: ContentSection) {

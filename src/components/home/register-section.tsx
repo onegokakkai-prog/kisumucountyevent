@@ -1,9 +1,13 @@
+import { ProfessionalForm } from "@/app/professionals/professional-form";
 import { RegisterForm } from "@/app/register/register-form";
 import { getContent } from "@/lib/content";
+import { toFormTabs, toProfessionalForm, toRegistrationForm } from "@/lib/registration-form";
 import { Container, Eyebrow, SectionTitle } from "../ui";
+import { FormTabs } from "./form-tabs";
 
 export async function RegisterSection() {
-  const { festival, register } = await getContent();
+  const content = await getContent();
+  const { festival, register } = content;
   return (
     <section id="register" aria-labelledby="register-title" className="scroll-mt-16">
       <div className="bg-navy text-white">
@@ -21,7 +25,11 @@ export async function RegisterSection() {
       <div className="bg-mist">
         <Container className="-mt-20 flex flex-col gap-8 pb-24 lg:flex-row-reverse lg:items-start">
           <div className="min-w-0 flex-1 rounded-3xl bg-white p-6 shadow-[0_20px_50px_rgba(11,36,64,0.12)] sm:p-10">
-            <RegisterForm />
+            <FormTabs
+              labels={toFormTabs(content)}
+              visitor={<RegisterForm form={toRegistrationForm(content)} />}
+              professional={<ProfessionalForm form={toProfessionalForm(content)} />}
+            />
           </div>
 
           <aside className="flex flex-col gap-4 lg:w-[360px] lg:flex-none lg:pt-[100px]">

@@ -2,7 +2,8 @@
 
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken, safeEqual } from "@/lib/admin-session";
+import { SESSION_COOKIE, SESSION_MAX_AGE, createSessionToken } from "@/lib/admin-session";
+import { checkAdminCredentials } from "@/lib/admin-users";
 import { clearFailures, lockedMinutes, recordFailure } from "@/lib/login-throttle";
 
 export type LoginState = { error?: string; email?: string };
@@ -21,23 +22,23 @@ async function clientKey() {
 export async function login(_prev: LoginState, formData: FormData): Promise<LoginState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
-  const expectedEmail = (process.env.ADMIN_EMAIL ?? "").trim().toLowerCase();
-  const expectedPassword = process.env.ADMIN_PASSWORD ?? "";
-
-  if (!expectedEmail || !expectedPassword) {
-    return { error: "Admin sign-in isn't set up yet. Add ADMIN_EMAIL and ADMIN_PASSWORD to the environment.", email };
-  }
-
   const key = await clientKey();
   const locked = await lockedMinutes(key);
   if (locked) {
     return { error: `Too many wrong attempts. Try again in ${locked} minute${locked === 1 ? "" : "s"}.`, email };
   }
 
-  // Compare both so a wrong email takes as long as a wrong password.
-  const emailOk = safeEqual(email, expectedEmail);
-  const passwordOk = safeEqual(password, expectedPassword);
-  if (!emailOk || !passwordOk) {
+  let result;
+  try {
+    result = await checkAdminCredentials(email, password);
+  } catch (err) {
+    console.error("Admin sign-in check failed", err);
+    return { error: "Couldn't sign in just now. Please try again.", email };
+  }
+  if (result === "not-configured") {
+    return { error: "Admin sign-in isn't set up yet. Run npm run seed:admin to create an account.", email };
+  }
+  if (result === "wrong") {
     await recordFailure(key);
     await new Promise((r) => setTimeout(r, 600));
     return { error: "That email and password don't match.", email };

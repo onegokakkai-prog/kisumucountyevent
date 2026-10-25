@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useTransition } from "react";
+import { startTransition, useActionState, useState, useTransition } from "react";
 import type { ContentSection } from "@/lib/content";
 import type { FestivalDay } from "@/lib/festival";
 import { buttonClass } from "../admin-ui";
@@ -30,7 +30,17 @@ export function SectionForm({ config, values }: { config: SectionConfig; values:
         </h2>
         <p className="text-[15px] text-muted">{config.description}</p>
       </div>
-      <form action={action} className="flex flex-col gap-5" key={version}>
+      {/* Submitted by hand rather than through the action prop: React resets a form after an
+          action, which snaps the list editors' dropdowns back to their first option on screen. */}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const data = new FormData(e.currentTarget);
+          startTransition(() => action(data));
+        }}
+        className="flex flex-col gap-5"
+        key={version}
+      >
         <div className={config.id === "colors" ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" : "flex flex-col gap-5"}>
           {config.fields.map((field) => (
             <FieldInput key={field.key} section={config.id} field={field} values={values} />
@@ -103,6 +113,23 @@ function FieldInput({ section, field, values }: { section: ContentSection; field
   }
   if (field.type === "programme") {
     return <ProgrammeField days={value as FestivalDay[]} />;
+  }
+  if (field.type === "toggle") {
+    return (
+      <div className="flex flex-col gap-1 rounded-2xl bg-mist px-4 py-2">
+        <label className="flex min-h-11 cursor-pointer items-center gap-3 text-[15px] font-semibold">
+          <input
+            type="checkbox"
+            name={field.key}
+            defaultChecked={value === true}
+            aria-describedby={describedBy}
+            className="size-5 flex-none accent-navy"
+          />
+          {field.label}
+        </label>
+        {help}
+      </div>
+    );
   }
   if (field.type === "color") {
     return <ColorInput id={id} name={field.key} label={field.label} initial={String(value)} />;

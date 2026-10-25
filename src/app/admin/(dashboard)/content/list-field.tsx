@@ -25,8 +25,14 @@ function toRow(item: Record<string, unknown>, fields: ItemField[]): Row {
   return row;
 }
 
+function newItemId() {
+  return Math.random().toString(36).slice(2, 10);
+}
+
 function emptyRow(fields: ItemField[]): Row {
-  return Object.fromEntries(fields.map((f) => [f.key, f.type === "select" ? (f.options?.[0]?.value ?? "") : ""]));
+  return Object.fromEntries(
+    fields.map((f) => [f.key, f.type === "select" ? (f.options?.[0]?.value ?? "") : f.type === "id" ? newItemId() : ""]),
+  );
 }
 
 export function ListField({
@@ -103,6 +109,7 @@ export function ListField({
 }
 
 function ItemInput({ field, value, onChange }: { field: ItemField; value: string; onChange: (v: string) => void }) {
+  if (field.type === "id") return null;
   const wide = field.type === "textarea" || field.type === "lines" || field.type === "sessions" || field.type === "image";
   const label = (
     <span>

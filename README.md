@@ -33,12 +33,18 @@ npm run build
 Registrations are saved to MongoDB, one per phone number (`0712…` and `+254712…` count
 as the same number). A person registering a family or school group sets the group size.
 
-Organisers see them at `/admin`. The browser asks for a login: any username, and the
-password in `ADMIN_PASSWORD`. If `ADMIN_PASSWORD` is not set, `/admin` stays locked.
+Organisers see them at `/admin`, signing in at `/admin/login`. Accounts are stored in the
+`admins` collection with hashed passwords. Create one, or reset its password, with:
+
+```bash
+npm run seed:admin -- organiser@example.com 'a-strong-password'
+```
+
+Until an account exists, `ADMIN_EMAIL` and `ADMIN_PASSWORD` from the environment are used.
 
 ## Deploying to Vercel
 
 1. Create a free MongoDB Atlas cluster and copy its connection string.
 2. In Network Access, allow `0.0.0.0/0` (Vercel's IP addresses change).
-3. In the Vercel project settings, add `MONGODB_URI`, `MONGODB_DB` and `ADMIN_PASSWORD`
-   as environment variables.
+3. In the Vercel project settings, add `MONGODB_URI`, `MONGODB_DB` and `ADMIN_SESSION_SECRET`
+   as environment variables, and create an admin with `npm run seed:admin`.

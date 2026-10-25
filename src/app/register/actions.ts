@@ -1,31 +1,44 @@
 "use server";
 
 import { z } from "zod";
+import { getContent } from "@/lib/content";
+import { readQuestionValues } from "@/lib/form-questions";
 import { saveRegistration } from "@/lib/registrations";
-import { registrationSchema, type RegisterState } from "./schema";
+import { readLocation, toRegistrationForm, type RegistrationForm } from "@/lib/registration-form";
+import { buildRegistrationSchema, type RegisterState } from "./schema";
 
-function readForm(formData: FormData) {
-  const wantsHub = formData.get("wantsHub") === "on";
+// Parts of the form the organisers have hidden are filled with neutral values, so a stale
+// page or a crafted request can't slip in answers the form no longer asks for.
+function readForm(formData: FormData, form: RegistrationForm) {
+  const text = (key: string) => {
+    const v = formData.get(key);
+    return typeof v === "string" ? v : "";
+  };
+  const role = text("role");
+  const wantsHub = form.show.hub && formData.get("wantsHub") === "on";
+  const askInstitution = form.show.institution && form.rolesWithInstitution.includes(role);
   return {
-    role: formData.get("role") ?? "",
-    name: formData.get("name") ?? "",
-    phone: formData.get("phone") ?? "",
-    email: formData.get("email") ?? "",
-    subCounty: formData.get("subCounty") ?? "",
-    institution: formData.get("institution") ?? "",
-    groupSize: formData.get("groupSize") ?? "",
+    role,
+    name: text("name"),
+    phone: text("phone"),
+    email: form.show.email ? text("email") : "",
+    ...readLocation(formData, form.location),
+    institution: askInstitution ? text("institution") : "",
+    groupSize: form.show.groupSize ? text("groupSize") : "1",
     days: formData.getAll("days"),
-    interests: formData.getAll("interests"),
+    interests: form.show.interests ? formData.getAll("interests") : [],
     wantsHub,
-    hubService: wantsHub ? formData.get("hubService") || undefined : undefined,
-    hubSlot: wantsHub ? formData.get("hubSlot") || undefined : undefined,
-    emailUpdates: formData.get("emailUpdates") === "on",
+    hubService: wantsHub ? text("hubService") || undefined : undefined,
+    hubSlot: wantsHub ? text("hubSlot") || undefined : undefined,
+    emailUpdates: form.show.updates && formData.get("emailUpdates") === "on",
+    ...readQuestionValues(formData, form.questions),
   };
 }
 
 export async function register(_prev: RegisterState, formData: FormData): Promise<RegisterState> {
-  const raw = readForm(formData);
-  const parsed = registrationSchema.safeParse(raw);
+  const form = toRegistrationForm(await getContent());
+  const raw = readForm(formData, form);
+  const parsed = buildRegistrationSchema(form, raw).safeParse(raw);
 
   if (!parsed.success) {
     return {

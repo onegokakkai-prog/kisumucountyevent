@@ -6,6 +6,7 @@ import { Icon } from "@/components/icons";
 import { Container } from "@/components/ui";
 import { getContent } from "@/lib/content";
 import { listPledges } from "@/lib/pledges";
+import { listProfessionals } from "@/lib/professionals";
 import { listRegistrations } from "@/lib/registrations";
 import { kes, LoadingPanel, PageHeader, Stats } from "./admin-ui";
 
@@ -13,6 +14,8 @@ export const metadata: Metadata = { title: "Overview" };
 
 const shortcuts = [
   { href: "/admin/registrations", title: "Registrations", text: "See who's planned their visit and download the list." },
+  { href: "/admin/professionals", title: "Professionals", text: "See who's offered to sponsor or volunteer, by CBC track and ward." },
+  { href: "/admin/form", title: "Forms", text: "Change both forms' questions, choices and wording, and add new questions." },
   { href: "/admin/pledges", title: "Pledges", text: "Track Buy-a-Brick pledges and mark money as received." },
   { href: "/admin/content", title: "Site content", text: "Change colours, wording, photos and the voiceover." },
 ];
@@ -25,7 +28,7 @@ export default function OverviewPage() {
         <Suspense fallback={<LoadingPanel label="Loading numbers…" />}>
           <Numbers />
         </Suspense>
-        <ul className="grid gap-4 md:grid-cols-3">
+        <ul className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {shortcuts.map((s) => (
             <li key={s.href}>
               <Link
@@ -48,7 +51,12 @@ export default function OverviewPage() {
 
 async function Numbers() {
   await connection();
-  const [registrations, pledges, content] = await Promise.all([listRegistrations(), listPledges(), getContent()]);
+  const [registrations, professionals, pledges, content] = await Promise.all([
+    listRegistrations(),
+    listProfessionals(),
+    listPledges(),
+    getContent(),
+  ]);
   const received = pledges.filter((p) => p.status === "received").reduce((sum, p) => sum + p.amount, 0);
   const pledged = pledges.reduce((sum, p) => sum + p.amount, 0);
 
@@ -57,6 +65,7 @@ async function Numbers() {
       items={[
         { label: "Registrations", value: registrations.length.toLocaleString("en-KE") },
         { label: "People coming", value: registrations.reduce((sum, r) => sum + r.groupSize, 0).toLocaleString("en-KE") },
+        { label: "Professionals", value: professionals.length.toLocaleString("en-KE") },
         { label: "Pledges", value: pledges.length.toLocaleString("en-KE") },
         { label: "Total pledged", value: kes.format(pledged) },
         { label: "Raised so far", value: kes.format(received + content.brick.raisedOffline) },
