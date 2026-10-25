@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import type { FestivalDay } from "@/lib/festival";
+import { trackColor } from "../festival-colors";
 
 export function ProgrammeTabs({ days }: { days: FestivalDay[] }) {
   const [active, setActive] = useState(0);
@@ -83,9 +84,7 @@ export function ProgrammeTabs({ days }: { days: FestivalDay[] }) {
               <ul className="flex flex-col gap-3.5">
                 {slot.main.map((s) => (
                   <li key={s.title} className="flex flex-col items-start gap-1">
-                    <span className="rounded-full bg-mist-3 px-2.5 py-0.5 text-xs font-bold tracking-[0.04em] text-lake">
-                      {s.track}
-                    </span>
+                    <TrackTag label={s.track} />
                     <span className="text-[17px] leading-snug font-semibold text-ink">{s.title}</span>
                   </li>
                 ))}
@@ -98,9 +97,7 @@ export function ProgrammeTabs({ days }: { days: FestivalDay[] }) {
               <ul className="flex flex-col gap-3.5">
                 {slot.hubs.map((s) => (
                   <li key={s.title} className="flex flex-col items-start gap-1">
-                    <span className="rounded-full bg-rust-soft px-2.5 py-0.5 text-xs font-bold tracking-[0.04em] text-rust-ink">
-                      {s.track}
-                    </span>
+                    <TrackTag label={s.track} />
                     <span className="text-base leading-snug text-body">{s.title}</span>
                   </li>
                 ))}
@@ -110,5 +107,17 @@ export function ProgrammeTabs({ days }: { days: FestivalDay[] }) {
         ))}
       </div>
     </div>
+  );
+}
+
+// A session's track label, in that track's colour.
+function TrackTag({ label }: { label: string }) {
+  const c = trackColor(label);
+  return (
+    <span
+      className={`rounded-full px-2.5 py-0.5 text-xs font-bold tracking-[0.04em] ${c ? `${c.soft} ${c.ink}` : "bg-mist-3 text-lake"}`}
+    >
+      {label}
+    </span>
   );
 }

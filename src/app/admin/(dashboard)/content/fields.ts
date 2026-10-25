@@ -94,13 +94,19 @@ export const sections: SectionConfig[] = [
   {
     id: "colors",
     title: "Colours",
-    description: "The main colours used across the site. Keep enough contrast between text and backgrounds.",
+    description:
+      "The main colours used across the site, and the festival accents that colour each track, its programme tags and the stripes. Track 1 uses Sun. Keep enough contrast between text and backgrounds.",
     fields: [
       { key: "navy", label: "Navy: headers, main text and dark sections", type: "color" },
       { key: "sun", label: "Sun: buttons and highlights", type: "color" },
       { key: "lake", label: "Lake: hovers and the wave in the hero", type: "color" },
       { key: "rust", label: "Rust: small labels and error messages", type: "color" },
       { key: "mist", label: "Mist: light section backgrounds", type: "color" },
+      { key: "coral", label: "Coral: festival accent (Track 2)", type: "color" },
+      { key: "teal", label: "Teal: festival accent (Track 3)", type: "color" },
+      { key: "azure", label: "Azure: festival accent (Track 4)", type: "color" },
+      { key: "leaf", label: "Leaf: festival accent (Track 5)", type: "color" },
+      { key: "plum", label: "Plum: festival accent (Track 6)", type: "color" },
     ],
   },
   {

@@ -48,7 +48,7 @@ async function Professionals() {
   await connection();
   const [rows, content] = await Promise.all([listProfessionals(), getContent()]);
   const form = toProfessionalForm(content);
-  const participation = form.questions.filter((q) => q.id !== "promoting");
+  const participation = form.questions.filter((q) => q.id === "participation");
   const volunteer = form.questions.find((q) => q.type === "yesno");
 
   const stats = [

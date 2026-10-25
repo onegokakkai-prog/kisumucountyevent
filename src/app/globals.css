@@ -22,6 +22,26 @@
   --color-haze: #d6e2ec;
   --color-sky: #c9d6e2;
 
+  /* Festival accents (one per track), used for tags, chips and stripes. Each has a pale
+     tint for backgrounds and a dark shade that stays readable as text. */
+  --color-coral: #ef6c4a;
+  --color-teal: #12a08a;
+  --color-leaf: #5aa23c;
+  --color-azure: #3b82c4;
+  --color-plum: #9b4f9e;
+  --color-sun-soft: color-mix(in srgb, var(--color-sun) 16%, white);
+  --color-sun-ink: color-mix(in srgb, var(--color-sun) 52%, black);
+  --color-coral-soft: color-mix(in srgb, var(--color-coral) 16%, white);
+  --color-coral-ink: color-mix(in srgb, var(--color-coral) 52%, black);
+  --color-teal-soft: color-mix(in srgb, var(--color-teal) 16%, white);
+  --color-teal-ink: color-mix(in srgb, var(--color-teal) 52%, black);
+  --color-leaf-soft: color-mix(in srgb, var(--color-leaf) 16%, white);
+  --color-leaf-ink: color-mix(in srgb, var(--color-leaf) 52%, black);
+  --color-azure-soft: color-mix(in srgb, var(--color-azure) 16%, white);
+  --color-azure-ink: color-mix(in srgb, var(--color-azure) 52%, black);
+  --color-plum-soft: color-mix(in srgb, var(--color-plum) 16%, white);
+  --color-plum-ink: color-mix(in srgb, var(--color-plum) 52%, black);
+
   --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
 }

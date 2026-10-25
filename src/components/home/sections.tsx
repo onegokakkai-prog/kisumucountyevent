@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getContent } from "@/lib/content";
 import { continuum, type TrackTone } from "@/lib/festival";
 import { getReceivedTotal } from "@/lib/pledges";
+import { festivalColor, trackColor } from "../festival-colors";
 import { Icon } from "../icons";
 import { Container, Eyebrow, SectionTitle } from "../ui";
 import { PledgeDialog } from "./pledge-dialog";
@@ -11,13 +12,8 @@ import { ProgrammeTabs } from "./programme-tabs";
 
 export async function About() {
   const { about } = await getContent();
-  const tones = [
-    "bg-mist-2 text-ink",
-    "bg-mist-3 text-ink",
-    "bg-mist-4 text-ink",
-    "bg-lake text-white",
-    "bg-navy text-white",
-  ];
+  const tones = ["bg-sun-soft text-ink", "bg-coral-soft text-ink", "bg-teal-soft text-ink", "bg-lake text-white", "bg-navy text-white"];
+  const numbers = ["text-sun-ink", "text-coral-ink", "text-teal-ink", "text-sun", "text-sun"];
   return (
     <section id="about" aria-labelledby="about-title">
       <Container className="flex flex-col gap-14 pt-28 pb-24 sm:pt-[120px] sm:pb-[100px]">
@@ -32,7 +28,7 @@ export async function About() {
             const dark = i >= 3;
             return (
               <li key={c.stage} className={`flex flex-col gap-2.5 rounded-2xl px-5 py-[22px] ${tones[i]}`}>
-                <span className={`font-display text-[15px] font-extrabold ${dark ? "text-sun" : "text-lake"}`}>
+                <span className={`font-display text-[15px] font-extrabold ${numbers[i] ?? "text-sun"}`}>
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="text-lg font-bold">{c.stage}</span>
@@ -83,14 +79,26 @@ export async function Tracks() {
         <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           {content.items.map((t, i) => {
             const s = toneStyles[t.tone] ?? toneStyles.light;
+            const c = trackColor(t.number) ?? festivalColor(i);
+            const light = t.tone === "light" || !toneStyles[t.tone];
             return (
-              <li key={`${t.number}-${i}`} className={`flex flex-col gap-4 rounded-[20px] p-7 sm:p-8 ${s.card}`}>
+              <li
+                key={`${t.number}-${i}`}
+                className={`relative flex flex-col gap-4 overflow-hidden rounded-[20px] p-7 sm:p-8 ${s.card}`}
+              >
+                {light ? <span aria-hidden="true" className={`absolute inset-x-0 top-0 h-1.5 ${c.solid}`} /> : null}
                 <div className="flex items-center justify-between">
-                  <span className={`font-display text-[44px] leading-none font-extrabold ${s.number}`}>
+                  <span className={`font-display text-[44px] leading-none font-extrabold ${light ? c.ink : s.number}`}>
                     <span className="sr-only">Track </span>
                     {t.number}
                   </span>
-                  <Icon name={t.icon} size={36} strokeWidth={1.8} className={s.meta} />
+                  <span
+                    className={`flex size-14 items-center justify-center rounded-full ${
+                      t.tone === "sun" ? "bg-navy text-sun" : `${c.solid} ${c.onSolid}`
+                    }`}
+                  >
+                    <Icon name={t.icon} size={28} strokeWidth={1.9} />
+                  </span>
                 </div>
                 <h3 className="text-[21px] leading-[1.3] font-bold">{t.title}</h3>
                 <ul className={`flex flex-col gap-2 text-base leading-snug ${s.text}`}>
@@ -166,8 +174,8 @@ export async function Highlights() {
                   </svg>
                   <span
                     className={`relative flex size-28 items-center justify-center rounded-full ${
-                      i === 1 ? "bg-white text-navy" : "bg-sun text-navy"
-                    }`}
+                      [festivalColor(0), festivalColor(1), festivalColor(2)][i % 3].solid
+                    } ${[festivalColor(0), festivalColor(1), festivalColor(2)][i % 3].onSolid}`}
                   >
                     <Icon name={h.icon} size={52} strokeWidth={1.6} />
                   </span>
@@ -203,7 +211,11 @@ export async function AccessHub() {
         <ul className="flex flex-[1.4_1_480px] flex-col gap-3.5">
           {access.items.map((s, i) => (
             <li key={`${s.title}-${i}`} className="flex items-start gap-5 rounded-[18px] bg-mist p-6 sm:p-[26px]">
-              <span className="flex size-[52px] flex-none items-center justify-center rounded-[14px] bg-navy text-sun">
+              <span
+                className={`flex size-[52px] flex-none items-center justify-center rounded-[14px] ${festivalColor(i + 2).solid} ${
+                  festivalColor(i + 2).onSolid
+                }`}
+              >
                 <Icon name={s.icon} size={26} />
               </span>
               <div className="flex flex-col gap-1.5">
@@ -293,7 +305,7 @@ export async function BuyABrick() {
 export async function Outcomes() {
   const { outcomes } = await getContent();
   return (
-    <section aria-labelledby="outcomes-title" className="bg-mist py-24 sm:py-[100px]">
+    <section aria-labelledby="outcomes-title" className="bg-sun-soft py-24 sm:py-[100px]">
       <Container className="flex flex-col gap-11">
         <h2
           id="outcomes-title"
@@ -303,9 +315,12 @@ export async function Outcomes() {
         </h2>
         <dl className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-x-8 gap-y-10">
           {outcomes.items.map((o, i) => (
-            <div key={`${o.value}-${i}`} className="flex flex-col-reverse justify-end gap-2 border-t-[3px] border-navy pt-[18px]">
+            <div
+              key={`${o.value}-${i}`}
+              className={`flex flex-col-reverse justify-end gap-2 border-t-[5px] pt-[18px] ${festivalColor(i + 1).border}`}
+            >
               <dt className="text-base leading-normal text-body">{o.label}</dt>
-              <dd className="font-display text-[56px] leading-none font-extrabold text-navy">{o.value}</dd>
+              <dd className={`font-display text-[56px] leading-none font-extrabold ${festivalColor(i + 1).ink}`}>{o.value}</dd>
             </div>
           ))}
         </dl>

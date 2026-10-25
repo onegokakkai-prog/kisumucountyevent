@@ -356,32 +356,35 @@ export const regions = [
 
 export const genders = ["Female", "Male", "Prefer not to say"] as const;
 
-// Careers grouped by CBE Senior School pathway and track ("Group | Choice").
+export const cbcPathways = ["STEM", "Social Sciences", "Arts & Sports Science", "TVET"] as const;
+
+// Careers grouped by the pathway they best fall in ("Pathway | Career").
 export const careerOptions = [
-  "STEM · Pure Sciences | Medicine & health (doctor, nurse, clinical officer)",
-  "STEM · Pure Sciences | Pharmacy & laboratory science",
-  "STEM · Pure Sciences | Scientific research",
-  "STEM · Applied Sciences | Agriculture & agribusiness",
-  "STEM · Applied Sciences | Food science & nutrition",
-  "STEM · Applied Sciences | Environment & conservation",
-  "STEM · Technical & Engineering | Engineering",
-  "STEM · Technical & Engineering | ICT & software",
-  "STEM · Technical & Engineering | Construction & built environment",
-  "STEM · Career & Technology Studies | Mechanics & motor vehicle",
-  "STEM · Career & Technology Studies | Electrical & plumbing",
-  "STEM · Career & Technology Studies | Fashion, beauty & hairdressing",
-  "STEM · Career & Technology Studies | Hospitality & catering",
-  "Social Sciences · Languages & Literature | Media & journalism",
-  "Social Sciences · Languages & Literature | Languages & translation",
-  "Social Sciences · Humanities & Business Studies | Teaching & education",
-  "Social Sciences · Humanities & Business Studies | Business, finance & accounting",
-  "Social Sciences · Humanities & Business Studies | Law & governance",
-  "Social Sciences · Humanities & Business Studies | Public service & administration",
-  "Social Sciences · Humanities & Business Studies | Community & social work",
-  "Social Sciences · Humanities & Business Studies | Religion & ministry",
-  "Arts & Sports Science · Arts | Music, drama & film",
-  "Arts & Sports Science · Arts | Visual arts & design",
-  "Arts & Sports Science · Sports Science | Sports, coaching & fitness",
+  "STEM | Medicine & health (doctor, nurse, clinical officer)",
+  "STEM | Pharmacy & laboratory science",
+  "STEM | Scientific research",
+  "STEM | Engineering",
+  "STEM | ICT & software",
+  "STEM | Agriculture & agribusiness",
+  "STEM | Food science & nutrition",
+  "STEM | Environment & conservation",
+  "STEM | Construction & built environment",
+  "Social Sciences | Teaching & education",
+  "Social Sciences | Business, finance & accounting",
+  "Social Sciences | Law & governance",
+  "Social Sciences | Public service & administration",
+  "Social Sciences | Community & social work",
+  "Social Sciences | Media & journalism",
+  "Social Sciences | Languages & translation",
+  "Social Sciences | Religion & ministry",
+  "Arts & Sports Science | Music, drama & film",
+  "Arts & Sports Science | Visual arts & design",
+  "Arts & Sports Science | Sports, coaching & fitness",
+  "TVET | Mechanics & motor vehicle",
+  "TVET | Electrical & plumbing",
+  "TVET | Building & carpentry",
+  "TVET | Fashion, beauty & hairdressing",
+  "TVET | Hospitality & catering",
 ];
 
 export const interests = [

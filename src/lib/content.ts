@@ -3,6 +3,7 @@ import { cacheLife, cacheTag } from "next/cache";
 import {
   brickDrive,
   careerOptions,
+  cbcPathways,
   festival,
   genders,
   regions,
@@ -56,7 +57,18 @@ export type FormQuestion = {
 };
 
 export type SiteContent = {
-  colors: { navy: string; lake: string; sun: string; rust: string; mist: string };
+  colors: {
+    navy: string;
+    lake: string;
+    sun: string;
+    rust: string;
+    mist: string;
+    coral: string;
+    teal: string;
+    leaf: string;
+    azure: string;
+    plum: string;
+  };
   festival: {
     name: string;
     theme: string;
@@ -156,7 +168,18 @@ export type SiteContent = {
 export type ContentSection = keyof SiteContent;
 
 export const defaultContent: SiteContent = {
-  colors: { navy: "#0b2440", lake: "#13466b", sun: "#f5b82e", rust: "#c2410c", mist: "#f4f7f9" },
+  colors: {
+    navy: "#0b2440",
+    lake: "#13466b",
+    sun: "#f5b82e",
+    rust: "#c2410c",
+    mist: "#f4f7f9",
+    coral: "#ef6c4a",
+    teal: "#12a08a",
+    leaf: "#5aa23c",
+    azure: "#3b82c4",
+    plum: "#9b4f9e",
+  },
   festival: {
     name: festival.name,
     theme: festival.theme,
@@ -282,10 +305,13 @@ export const defaultContent: SiteContent = {
   },
   proQuestions: {
     items: [
-      question("profession", "Your profession, in relation to the CBC pathways", "select", careerOptions, {
+      question("pathway", "Which CBC pathway does your profession best fall in?", "radio", cbcPathways, {
+        required: "yes",
+      }),
+      question("profession", "Your profession", "select", careerOptions, {
         required: "yes",
         other: "yes",
-        help: "Choose the closest match. Pick Other to type your own.",
+        help: "Grouped by pathway. Choose the closest match, or pick Other to type your own.",
       }),
       question(
         "promoting",

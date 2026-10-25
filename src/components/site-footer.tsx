@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getContent } from "@/lib/content";
 import { festival as festivalInfo } from "@/lib/festival";
+import { FestivalBand } from "./festival-colors";
 
 const festivalLinks = [
   { href: "/#about", label: "About" },
@@ -13,8 +14,9 @@ const festivalLinks = [
 export async function SiteFooter() {
   const { festival } = await getContent();
   return (
-    <footer className="bg-navy pt-16 pb-10 text-white sm:pt-[72px]">
-      <div className="mx-auto flex max-w-[1240px] flex-col gap-12 px-4 sm:px-8">
+    <footer className="bg-navy pb-10 text-white">
+      <FestivalBand />
+      <div className="mx-auto flex max-w-[1240px] flex-col gap-12 px-4 pt-16 sm:px-8 sm:pt-[72px]">
         <div className="flex flex-wrap justify-between gap-x-16 gap-y-10">
           <div className="flex max-w-[420px] flex-[1_1_320px] flex-col gap-4">
             <p className="font-display text-[28px] leading-[1.1] font-extrabold">

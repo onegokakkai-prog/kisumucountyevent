@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { getContent } from "@/lib/content";
 import { festival as festivalInfo } from "@/lib/festival";
+import { FestivalBand, festivalColor } from "../festival-colors";
 import { Icon } from "../icons";
 import { SiteHeader } from "../site-header";
 import { Container } from "../ui";
@@ -52,6 +53,7 @@ export async function Hero() {
 
   return (
     <header data-hero className="bg-navy text-white">
+      <FestivalBand className="relative z-20" />
       <div className="relative overflow-hidden">
         <LakeSunrise />
         <div className="relative z-10">
@@ -101,7 +103,10 @@ export async function Hero() {
                   i % 2 === 1 ? "sm:border-l" : ""
                 } ${i >= 2 ? "sm:border-t lg:border-t-0" : ""} ${i === 2 ? "lg:border-l" : ""} border-line`}
               >
-                <dt className="text-[13px] font-bold tracking-[0.06em] text-muted uppercase">{f.term}</dt>
+                <dt className="flex items-center gap-2 text-[13px] font-bold tracking-[0.06em] text-muted uppercase">
+                  <span aria-hidden="true" className={`size-2.5 rounded-full ${festivalColor(i + 1).solid}`} />
+                  {f.term}
+                </dt>
                 <dd className="mt-1.5 font-display text-[22px] leading-tight font-bold">{f.value}</dd>
                 <dd className="mt-1 text-sm text-muted">{f.note}</dd>
               </div>
