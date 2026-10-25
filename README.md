@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kisumu County Education Festival 2026
 
-## Getting Started
+Event website for the inaugural Kisumu County Education Festival (Kisumu Central Grounds, December 2026).
 
-First, run the development server:
+Built with Next.js (App Router), Tailwind CSS v4 and Zod.
+
+## Develop
+
+Needs a MongoDB database. Copy `.env.example` to `.env.local` and fill it in
+(locally `MONGODB_URI=mongodb://localhost:27017`).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run lint
+npm run build
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- `src/lib/festival.ts` — all festival content: dates, venue, tracks, two-day programme, outcomes, partners, form options. Edit this file to update copy.
+  - `festival.dateLabel` / `dateDetail` — set the exact dates once confirmed.
+  - `brickDrive` — set `pricePerBrick`, `raised` and `target` to show the Buy-a-Brick progress bar.
+- `src/app/page.tsx` — home page (sections in `src/components/home/`).
+- `src/app/register/` — registration page, form, Zod schema and server action.
+- `src/lib/registrations.ts` — saving and listing registrations (MongoDB, `registrations` collection).
+- `src/app/admin/` — organisers' page with totals, the full list and a CSV download.
+- `src/proxy.ts` — password protection for `/admin`.
+- `public/partners/` — partner logos.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Registrations
 
-## Learn More
+Registrations are saved to MongoDB, one per phone number (`0712…` and `+254712…` count
+as the same number). A person registering a family or school group sets the group size.
 
-To learn more about Next.js, take a look at the following resources:
+Organisers see them at `/admin`. The browser asks for a login: any username, and the
+password in `ADMIN_PASSWORD`. If `ADMIN_PASSWORD` is not set, `/admin` stays locked.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deploying to Vercel
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Create a free MongoDB Atlas cluster and copy its connection string.
+2. In Network Access, allow `0.0.0.0/0` (Vercel's IP addresses change).
+3. In the Vercel project settings, add `MONGODB_URI`, `MONGODB_DB` and `ADMIN_PASSWORD`
+   as environment variables.

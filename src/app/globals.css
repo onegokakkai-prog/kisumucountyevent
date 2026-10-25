@@ -1,26 +1,82 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-navy: #0b2440;
+  --color-lake: #13466b;
+  --color-lake-2: #1b5a84;
+  --color-lake-3: #2a6f98;
+  --color-wave: #7fb3d5;
+  --color-sun: #f5b82e;
+  --color-rust: #c2410c;
+  --color-rust-soft: #fcebd9;
+  --color-rust-ink: #7a3410;
+  --color-ink: #10202f;
+  --color-body: #34485a;
+  --color-muted: #4a5b6b;
+  --color-mist: #f4f7f9;
+  --color-mist-2: #eef4f8;
+  --color-mist-3: #e2edf4;
+  --color-mist-4: #d3e4ef;
+  --color-line: #e2e8ee;
+  --color-line-strong: #b9c8d5;
+  --color-haze: #d6e2ec;
+  --color-sky: #c9d6e2;
+
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+html {
+  scroll-behavior: smooth;
+  /* Clears the sticky register bar on the home page. */
+  scroll-padding-top: 84px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Tailwind v4 dropped the pointer cursor on buttons; restore it for anything clickable. */
+@layer base {
+  button:not(:disabled),
+  [role="tab"],
+  select,
+  summary {
+    cursor: pointer;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-sun);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Voiceover seek bar: the track fill comes from --progress; only the thumb needs styling. */
+.voiceover-range::-webkit-slider-thumb {
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  background: var(--color-sun);
+}
+.voiceover-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--color-sun);
+}
+.voiceover-range:disabled::-webkit-slider-thumb {
+  visibility: hidden;
+}
+.voiceover-range:disabled::-moz-range-thumb {
+  visibility: hidden;
 }
