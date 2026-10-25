@@ -255,7 +255,7 @@ export const defaultContent: SiteContent = {
   },
   stats: {
     show: true,
-    minRegistrations: 20,
+    minRegistrations: 5,
     eyebrow: "Who's coming",
     title: "The festival is filling up.",
     body: "Live numbers from registrations so far. Register to add yourself.",
