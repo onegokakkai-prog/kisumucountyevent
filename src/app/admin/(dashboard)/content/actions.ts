@@ -20,9 +20,9 @@ const photosSchema = z
   .array(
     z.object({
       src: url.refine((v) => v !== "", "Every photo needs a file."),
-      alt: z.string().trim().min(1, "Describe every photo for people using screen readers.").max(300),
-      caption: z.string().trim().max(200),
-      credit: z.string().trim().max(200).optional(),
+      alt: z.string().trim().min(1, "Describe every photo for people using screen readers.").max(600, "Keep each photo description under 600 characters."),
+      caption: z.string().trim().max(1000, "Keep each caption under 1,000 characters."),
+      credit: z.string().trim().max(300, "Keep each photo credit under 300 characters.").optional(),
     }),
   )
   .max(40, "Up to 40 photos.");

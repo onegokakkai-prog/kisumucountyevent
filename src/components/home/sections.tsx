@@ -55,7 +55,7 @@ export async function Preparation() {
           </div>
           <p className="max-w-[440px] text-lg leading-[1.65] text-body">{preparation.body}</p>
         </div>
-        <PreparationGallery photos={preparation.photos} />
+        <PreparationGallery photos={preparation.photos} large={preparation.large} />
       </Container>
     </section>
   );

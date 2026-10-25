@@ -81,7 +81,7 @@ export type SiteContent = {
     phoneLabel: string;
   };
   about: { title: string; body: string };
-  preparation: { eyebrow: string; title: string; body: string; photos: Photo[] };
+  preparation: { eyebrow: string; title: string; body: string; large: number; photos: Photo[] };
   tracks: { eyebrow: string; title: string; items: TrackCard[] };
   programme: { eyebrow: string; title: string; days: FestivalDay[] };
   keynote: { eyebrow: string; title: string; items: KeynoteSpeaker[] };
@@ -201,6 +201,7 @@ export const defaultContent: SiteContent = {
     eyebrow: "Road to the festival",
     title: "Preparations are under way.",
     body: "Schools, teachers and partners across the county are getting ready. Here's a look behind the scenes.",
+    large: 2,
     photos: preparationPhotos,
   },
   tracks: {

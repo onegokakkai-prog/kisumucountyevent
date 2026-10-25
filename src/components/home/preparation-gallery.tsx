@@ -5,14 +5,24 @@ import { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/lib/festival";
 import { Icon } from "../icons";
 
-const VISIBLE = 5;
+const SMALL = 4;
 
-// Grid of preparation photos; any photo opens a full-screen viewer that can step through all of them.
-export function PreparationGallery({ photos }: { photos: Photo[] }) {
+// Grid placement of the large photos, by how many there are.
+const layout: Record<number, string> = {
+  1: "col-span-2 lg:row-span-2",
+  2: "col-span-2 lg:col-span-6",
+  3: "col-span-2 lg:col-span-4",
+};
+
+// Grid of preparation photos: the first one to three are shown large, with up to four smaller
+// ones under them. Any photo opens a full-screen viewer that can step through all of them.
+export function PreparationGallery({ photos, large: largeSetting }: { photos: Photo[]; large: number }) {
+  const large = Math.min(3, Math.max(1, Math.round(largeSetting) || 1));
+  const visible = large + SMALL;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [index, setIndex] = useState<number | null>(null);
   const touchX = useRef<number | null>(null);
-  const hidden = Math.max(0, photos.length - VISIBLE);
+  const hidden = Math.max(0, photos.length - visible);
 
   useEffect(() => {
     const dialog = dialogRef.current;
@@ -28,23 +38,24 @@ export function PreparationGallery({ photos }: { photos: Photo[] }) {
 
   return (
     <>
-      <ul className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4 lg:grid-rows-2">
-        {photos.slice(0, VISIBLE).map((p, i) => {
-          const more = i === VISIBLE - 1 && hidden > 0;
+      <ul className={`grid grid-cols-2 gap-3 sm:gap-4 ${large === 1 ? "lg:grid-cols-4 lg:grid-rows-2" : "lg:grid-cols-12"}`}>
+        {photos.slice(0, visible).map((p, i) => {
+          const isLarge = i < large;
+          const more = i === visible - 1 && hidden > 0;
           return (
-            <li key={p.src} className={i === 0 ? "col-span-2 lg:row-span-2" : ""}>
+            <li key={p.src} className={isLarge ? layout[large] : "lg:col-span-3"}>
               <button
                 type="button"
                 onClick={() => setIndex(i)}
                 className={`group relative block aspect-[4/3] w-full cursor-zoom-in overflow-hidden rounded-[18px] bg-mist-2 lg:h-full ${
-                  i === 0 ? "lg:aspect-auto" : ""
+                  isLarge && large === 1 ? "lg:aspect-auto" : ""
                 }`}
               >
                 <Image
                   src={p.src}
                   alt={p.alt}
                   fill
-                  sizes={i === 0 ? "(min-width: 1024px) 600px, 100vw" : "(min-width: 1024px) 300px, 50vw"}
+                  sizes={isLarge ? `(min-width: 1024px) ${large === 3 ? 400 : 600}px, 100vw` : "(min-width: 1024px) 300px, 50vw"}
                   className="object-cover transition-transform duration-300 ease-out group-hover:scale-[1.03] motion-reduce:transition-none"
                 />
                 {more ? (
@@ -52,8 +63,8 @@ export function PreparationGallery({ photos }: { photos: Photo[] }) {
                     +{hidden} more
                   </span>
                 ) : (
-                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/85 to-transparent px-4 pt-10 pb-3.5 text-left text-sm font-semibold text-white sm:text-[15px]">
-                    {p.caption}
+                  <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy/90 via-navy/60 to-transparent px-4 pt-12 pb-3.5 text-left text-sm font-semibold text-white sm:text-[15px]">
+                    <span className={`${isLarge ? "line-clamp-3" : "line-clamp-2"} leading-snug`}>{p.caption}</span>
                   </span>
                 )}
               </button>
@@ -111,8 +122,8 @@ export function PreparationGallery({ photos }: { photos: Photo[] }) {
               >
                 <Icon name="chevron-left" size={22} strokeWidth={2.5} />
               </button>
-              <div className="min-w-0 text-center">
-                <p className="font-semibold text-white">{photo.caption}</p>
+              <div className="max-h-[30dvh] max-w-[70ch] min-w-0 overflow-y-auto text-center">
+                <p className="leading-relaxed font-semibold whitespace-pre-line text-white">{photo.caption}</p>
                 {photo.credit ? <p className="mt-0.5 text-xs text-haze/80">Photo: {photo.credit}</p> : null}
               </div>
               <button

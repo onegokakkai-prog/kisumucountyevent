@@ -150,7 +150,18 @@ export const sections: SectionConfig[] = [
       { key: "eyebrow", label: "Small label", type: "text" },
       { key: "title", label: "Heading", type: "text" },
       { key: "body", label: "Paragraph", type: "textarea" },
-      { key: "photos", label: "Photos", type: "photos", help: "The first photo is shown large. Five are shown at once." },
+      {
+        key: "large",
+        label: "How many photos to show large",
+        type: "number",
+        help: "1, 2 or 3. The first photos in the list are shown large, with up to four smaller ones under them.",
+      },
+      {
+        key: "photos",
+        label: "Photos",
+        type: "photos",
+        help: "Captions can be up to 1,000 characters. Long captions are shortened on the page and shown in full when the photo is opened.",
+      },
     ],
   },
   {

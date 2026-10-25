@@ -5,6 +5,8 @@ import type { Photo } from "@/lib/festival";
 import { secondaryButtonClass } from "../admin-ui";
 import { uploadFile } from "./upload";
 
+const CAPTION_MAX = 1000;
+
 const inputClass =
   "min-h-11 w-full rounded-xl border-[1.5px] border-line-strong bg-white px-3 py-2 text-[15px] focus:border-navy focus:outline-3 focus:outline-offset-1 focus:outline-sun";
 
@@ -52,11 +54,22 @@ export function PhotosField({ name, initial }: { name: string; initial: Photo[] 
             <div className="flex min-w-0 flex-1 flex-col gap-2">
               <label className="flex flex-col gap-1 text-sm font-semibold">
                 Description for screen readers (required)
-                <input value={p.alt} onChange={(e) => update(i, { alt: e.target.value })} required className={inputClass} />
+                <input value={p.alt} onChange={(e) => update(i, { alt: e.target.value })} required maxLength={600} className={inputClass} />
               </label>
               <label className="flex flex-col gap-1 text-sm font-semibold">
-                Caption
-                <input value={p.caption} onChange={(e) => update(i, { caption: e.target.value })} className={inputClass} />
+                <span className="flex items-baseline justify-between gap-3">
+                  Caption
+                  <span className={`text-xs font-normal tabular-nums ${p.caption.length > CAPTION_MAX ? "text-rust" : "text-muted"}`}>
+                    {p.caption.length.toLocaleString("en-KE")} / {CAPTION_MAX.toLocaleString("en-KE")}
+                  </span>
+                </span>
+                <textarea
+                  value={p.caption}
+                  onChange={(e) => update(i, { caption: e.target.value })}
+                  maxLength={CAPTION_MAX}
+                  rows={3}
+                  className={`${inputClass} resize-y leading-relaxed`}
+                />
               </label>
               {p.credit !== undefined ? (
                 <label className="flex flex-col gap-1 text-sm font-semibold">
@@ -66,7 +79,7 @@ export function PhotosField({ name, initial }: { name: string; initial: Photo[] 
               ) : null}
             </div>
             <div className="flex flex-row gap-1 sm:flex-col">
-              <span className="mr-auto self-center text-sm font-bold text-muted sm:mr-0 sm:mb-1">{i === 0 ? "Large" : `#${i + 1}`}</span>
+              <span className="mr-auto self-center text-sm font-bold text-muted sm:mr-0 sm:mb-1">#{i + 1}</span>
               <button type="button" onClick={() => move(i, -1)} disabled={i === 0} aria-label="Move up" className="min-h-10 rounded-lg px-3 text-sm font-semibold text-navy hover:bg-mist disabled:opacity-30">
                 ↑ Up
               </button>
