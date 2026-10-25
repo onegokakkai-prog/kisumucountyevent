@@ -6,7 +6,7 @@ export const festival = {
   year: 2026,
   edition: "Inaugural edition",
   theme:
-    "Honoring educational heritage, bridging CBE pathways, and fostering inclusive innovation — from early years to careers.",
+    "Dala ka Dala, Gweng ka Gweng: Igniting Community Action to Transform Education from Early Years to Thriving Careers",
   // to confirm: exact dates
   dateLabel: "Late December 2026",
   dateDetail: "Exact dates to be announced",
