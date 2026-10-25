@@ -116,7 +116,7 @@ export const sections: SectionConfig[] = [
     fields: [
       { key: "name", label: "Festival name", type: "text" },
       { key: "theme", label: "Tagline under the name", type: "textarea" },
-      { key: "dateLabel", label: "Dates", type: "text", help: "For example: 18–19 December 2026" },
+      { key: "dateLabel", label: "Dates", type: "text", help: "For example: 28–29 December 2026" },
       { key: "dateDetail", label: "Dates note", type: "text" },
       { key: "venue", label: "Venue", type: "text" },
       { key: "gates", label: "Gate opening times", type: "text" },
@@ -184,6 +184,30 @@ export const sections: SectionConfig[] = [
       { key: "eyebrow", label: "Small label", type: "text" },
       { key: "title", label: "Heading", type: "text" },
       { key: "days", label: "Days", type: "programme" },
+    ],
+  },
+  {
+    id: "keynote",
+    title: "Keynote speakers",
+    description: "The keynote section after the programme. One speaker is shown large; more are shown side by side. Remove everyone to hide it.",
+    fields: [
+      { key: "eyebrow", label: "Small label", type: "text" },
+      { key: "title", label: "Heading", type: "text", help: "e.g. Hear from our keynote speakers." },
+      {
+        key: "items",
+        label: "Speakers",
+        type: "list",
+        itemName: "speaker",
+        max: 6,
+        item: [
+          { key: "photo", label: "Photo (optional)", type: "image" },
+          { key: "name", label: "Name", type: "text", required: true },
+          { key: "role", label: "Title or role", type: "text", help: "e.g. Cabinet Secretary for Education" },
+          { key: "talk", label: "Talk title", type: "text" },
+          { key: "when", label: "When", type: "text", help: "e.g. Day 2 · Morning" },
+          { key: "bio", label: "Short bio", type: "textarea" },
+        ],
+      },
     ],
   },
   {
@@ -268,6 +292,23 @@ export const sections: SectionConfig[] = [
       { key: "paybill", label: "M-Pesa Paybill number", type: "text", help: "Leave empty until the Paybill is ready." },
       { key: "account", label: "Account number", type: "text" },
       { key: "instructions", label: "How to pay", type: "lines", help: "One step per line." },
+    ],
+  },
+  {
+    id: "stats",
+    title: "Registration stats",
+    description: "The public “Who's coming” section with live totals and charts, just above the registration form. Only totals are shown, never names.",
+    fields: [
+      { key: "show", label: "Show the stats on the site", type: "toggle" },
+      {
+        key: "minRegistrations",
+        label: "Only show once this many people have registered",
+        type: "number",
+        help: "Keeps the section hidden while the numbers are still small.",
+      },
+      { key: "eyebrow", label: "Small label", type: "text" },
+      { key: "title", label: "Heading", type: "text" },
+      { key: "body", label: "Paragraph", type: "textarea" },
     ],
   },
   {

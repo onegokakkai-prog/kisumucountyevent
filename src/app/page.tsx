@@ -4,6 +4,7 @@ import {
   AccessHub,
   BuyABrick,
   Highlights,
+  Keynote,
   Outcomes,
   Partners,
   Preparation,
@@ -11,6 +12,7 @@ import {
   Tracks,
 } from "@/components/home/sections";
 import { RegisterSection } from "@/components/home/register-section";
+import { StatsSection } from "@/components/home/stats-section";
 import { StickyRegister } from "@/components/home/sticky-register";
 import { SiteFooter } from "@/components/site-footer";
 import { getContent } from "@/lib/content";
@@ -25,6 +27,8 @@ export default async function Home() {
     description: festival.theme,
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     eventStatus: "https://schema.org/EventScheduled",
+    startDate: festivalInfo.startDate,
+    endDate: festivalInfo.endDate,
     location: {
       "@type": "Place",
       name: festival.venue,
@@ -51,10 +55,12 @@ export default async function Home() {
         <Preparation />
         <Tracks />
         <Programme />
+        <Keynote />
         <Highlights />
         <AccessHub />
         <BuyABrick />
         <Outcomes />
+        <StatsSection />
         <RegisterSection />
         <Partners />
       </main>

@@ -41,6 +41,7 @@ export type AccessCard = { title: string; description: string; icon: ContentIcon
 export type Outcome = { value: string; label: string };
 export type Partner = { role: string; name: string; logo: string };
 export type TeamMember = { name: string; role: string; bio: string; photo: string };
+export type KeynoteSpeaker = { name: string; role: string; talk: string; when: string; bio: string; photo: string };
 export type QuestionType = "text" | "textarea" | "number" | "select" | "radio" | "checkboxes" | "yesno";
 // "required" and "other" are "yes" / "no". A question with showIfQuestion is only asked when
 // the question with that wording was answered with showIfAnswer.
@@ -83,6 +84,7 @@ export type SiteContent = {
   preparation: { eyebrow: string; title: string; body: string; photos: Photo[] };
   tracks: { eyebrow: string; title: string; items: TrackCard[] };
   programme: { eyebrow: string; title: string; days: FestivalDay[] };
+  keynote: { eyebrow: string; title: string; items: KeynoteSpeaker[] };
   highlights: { title: string; items: Highlight[] };
   outcomes: { title: string; items: Outcome[] };
   access: { eyebrow: string; title: string; body: string; items: AccessCard[] };
@@ -98,6 +100,7 @@ export type SiteContent = {
     instructions: string;
   };
   register: { title: string; body: string };
+  stats: { show: boolean; minRegistrations: number; eyebrow: string; title: string; body: string };
   // Registration form wording and which optional parts are shown.
   formFields: {
     rolesHeading: string;
@@ -210,6 +213,20 @@ export const defaultContent: SiteContent = {
     title: "Main stage by day. Hubs and clinics all day.",
     days: programme,
   },
+  keynote: {
+    eyebrow: "Keynote",
+    title: "Hear from our keynote speaker.",
+    items: [
+      {
+        name: "To be announced",
+        role: "Keynote speaker",
+        talk: "Senior Secondary CBE keynote & parent Q&A",
+        when: "Day 2 · Morning",
+        bio: "Our keynote speaker will be announced soon. Register now and we'll let you know.",
+        photo: "",
+      },
+    ],
+  },
   highlights: {
     title: "Three moments you won't want to miss.",
     items: highlights.map((h) => ({ ...h, image: "" })),
@@ -235,6 +252,13 @@ export const defaultContent: SiteContent = {
     account: "BRICK",
     instructions:
       "Go to M-Pesa and choose Lipa na M-Pesa, then Pay Bill.\nEnter the business number and account shown here.\nEnter the amount you pledged and your M-Pesa PIN.\nKeep the confirmation SMS; the festival team will confirm your brick.",
+  },
+  stats: {
+    show: true,
+    minRegistrations: 20,
+    eyebrow: "Who's coming",
+    title: "The festival is filling up.",
+    body: "Live numbers from registrations so far. Register to add yourself.",
   },
   register: {
     title: "Plan your visit",
@@ -282,8 +306,8 @@ export const defaultContent: SiteContent = {
       .join("\n"),
     regions: regions.join("\n"),
     genders: genders.join("\n"),
-    day1: "Day 1 — Opening, Town Hall & constituency debates",
-    day2: "Day 2 — CBE keynote, Gubernatorial Debate & Grand Awards",
+    day1: "Day 1, Mon 28 Dec — Opening, Town Hall & constituency debates",
+    day2: "Day 2, Tue 29 Dec — CBE keynote, Gubernatorial Debate & Grand Awards",
     interests: interests.join("\n"),
     hubServices: hubServices.join("\n"),
     hubSlots: hubSlots.join("\n"),

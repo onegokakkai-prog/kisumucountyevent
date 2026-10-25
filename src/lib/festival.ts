@@ -7,9 +7,11 @@ export const festival = {
   edition: "Inaugural edition",
   theme:
     "Dala ka Dala, Gweng ka Gweng: Igniting Community Action to Transform Education from Early Years to Thriving Careers",
-  // to confirm: exact dates
-  dateLabel: "Late December 2026",
-  dateDetail: "Exact dates to be announced",
+  dateLabel: "28–29 December 2026",
+  dateDetail: "Monday & Tuesday",
+  // For search engines (schema.org Event), in East Africa Time.
+  startDate: "2026-12-28T08:00:00+03:00",
+  endDate: "2026-12-29T18:00:00+03:00",
   durationLabel: "2 days",
   venue: "Kisumu Central Grounds",
   location: "Kisumu County, Kenya",

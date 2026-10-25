@@ -1,5 +1,6 @@
 "use server";
 
+import { updateTag } from "next/cache";
 import { z } from "zod";
 import { getContent } from "@/lib/content";
 import { readQuestionValues } from "@/lib/form-questions";
@@ -72,5 +73,6 @@ export async function register(_prev: RegisterState, formData: FormData): Promis
     };
   }
 
+  updateTag("registrations");
   return { status: "success", name: parsed.data.name, phone: parsed.data.phone };
 }

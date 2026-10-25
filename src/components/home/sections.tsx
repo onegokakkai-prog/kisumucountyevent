@@ -146,6 +146,77 @@ export async function Programme() {
   );
 }
 
+export async function Keynote() {
+  const { keynote } = await getContent();
+  if (keynote.items.length === 0) return null;
+  const single = keynote.items.length === 1;
+  return (
+    <section id="keynote" aria-labelledby="keynote-title" className="scroll-mt-16 pb-24 sm:pb-[110px]">
+      <Container className="flex flex-col gap-10">
+        <div className="flex max-w-[680px] flex-col gap-3.5">
+          <Eyebrow>{keynote.eyebrow}</Eyebrow>
+          <SectionTitle id="keynote-title">{keynote.title}</SectionTitle>
+        </div>
+        <ul className={single ? "flex flex-col" : "grid gap-6 md:grid-cols-2"}>
+          {keynote.items.map((k, i) => {
+            const c = festivalColor(i + 1);
+            const announced = !/^to be announced$/i.test(k.name.trim());
+            return (
+              <li
+                key={`${k.name}-${i}`}
+                className={`relative grid overflow-hidden rounded-[28px] ${c.soft} ${single ? "md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]" : ""}`}
+              >
+                <div className={`relative ${single ? "aspect-[4/3] md:aspect-auto md:min-h-[420px]" : "aspect-[4/3]"} ${c.solid}`}>
+                  {k.photo ? (
+                    <Image
+                      src={k.photo}
+                      alt={`Portrait of ${k.name}`}
+                      fill
+                      sizes={single ? "(min-width: 768px) 520px, 100vw" : "(min-width: 768px) 600px, 100vw"}
+                      className="object-cover"
+                    />
+                  ) : (
+                    <div aria-hidden="true" className="absolute inset-0 flex items-center justify-center">
+                      <svg viewBox="0 0 400 300" preserveAspectRatio="none" className="absolute inset-x-0 bottom-0 h-1/2 w-full opacity-25">
+                        <path d="M0 60 C70 40 130 40 200 60 S330 80 400 60 V300 H0Z" className="fill-white" />
+                        <path d="M0 120 C70 100 130 100 200 120 S330 140 400 120 V300 H0Z" className="fill-navy" />
+                      </svg>
+                      <span className="relative flex size-32 items-center justify-center rounded-full bg-white/90 font-display text-5xl font-extrabold text-navy">
+                        {announced ? initials(k.name) : <Icon name="speech" size={56} strokeWidth={1.6} />}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col justify-center gap-4 p-7 sm:p-10">
+                  {k.when ? <p className={`text-sm font-bold tracking-[0.06em] uppercase ${c.ink}`}>{k.when}</p> : null}
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="font-display text-[clamp(28px,3.2vw,40px)] leading-[1.05] font-extrabold tracking-[-0.02em] text-navy">
+                      {k.name}
+                    </h3>
+                    {k.role ? <p className="text-lg font-semibold text-body">{k.role}</p> : null}
+                  </div>
+                  {k.talk ? (
+                    <p className="flex items-start gap-3 text-xl leading-snug font-bold text-ink">
+                      <span aria-hidden="true" className={`mt-1 flex size-8 flex-none items-center justify-center rounded-full ${c.solid} ${c.onSolid}`}>
+                        <Icon name="speech" size={16} strokeWidth={2.2} />
+                      </span>
+                      <span>
+                        <span className="sr-only">Talk: </span>
+                        {k.talk}
+                      </span>
+                    </p>
+                  ) : null}
+                  {k.bio ? <p className="max-w-[560px] text-base leading-relaxed text-body">{k.bio}</p> : null}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      </Container>
+    </section>
+  );
+}
+
 export async function Highlights() {
   const { highlights } = await getContent();
   return (
