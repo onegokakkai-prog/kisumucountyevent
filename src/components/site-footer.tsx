@@ -29,7 +29,7 @@ export async function SiteFooter() {
               href="/#register"
               className="self-start rounded-full bg-sun px-6 py-3.5 text-base font-bold text-navy transition-colors hover:brightness-105"
             >
-              Register free
+              Registration
             </Link>
           </div>
           <nav aria-label="Footer" className="flex flex-col">

@@ -12,7 +12,7 @@ export async function RegisterSection() {
     <section id="register" aria-labelledby="register-title" className="scroll-mt-16">
       <div className="bg-navy text-white">
         <Container className="flex flex-col gap-3.5 pt-24 pb-[120px] sm:pt-[100px]">
-          <Eyebrow className="text-sun">Registration · Free</Eyebrow>
+          <Eyebrow className="text-sun">{register.fee ? `Registration · ${register.fee}` : "Registration"}</Eyebrow>
           <SectionTitle id="register-title" className="text-white">
             {register.title}
           </SectionTitle>
@@ -56,6 +56,12 @@ export async function RegisterSection() {
                   <dt className="text-[13px] font-bold tracking-[0.06em] text-muted uppercase">Venue</dt>
                   <dd className="mt-1 text-base font-semibold">{festival.venue}, Kisumu County</dd>
                 </div>
+                {register.fee ? (
+                  <div>
+                    <dt className="text-[13px] font-bold tracking-[0.06em] text-muted uppercase">Registration fee</dt>
+                    <dd className="mt-1 text-base font-semibold">{register.fee}</dd>
+                  </div>
+                ) : null}
               </dl>
               <a
                 href="https://www.google.com/maps/search/?api=1&query=Kisumu+Central+Grounds"

@@ -46,7 +46,7 @@ export function SiteHeader({ name, variant = "full" }: { name: string; variant?:
                 href="/#register"
                 className="inline-flex min-h-11 items-center rounded-full bg-sun px-[22px] text-[15px] font-bold text-navy transition-colors hover:brightness-105"
               >
-                Register free
+                Registration
               </Link>
             </div>
             <button
@@ -90,7 +90,7 @@ export function SiteHeader({ name, variant = "full" }: { name: string; variant?:
             onClick={() => setOpen(false)}
             className="mt-2 flex min-h-[52px] items-center justify-center rounded-full bg-sun text-[17px] font-extrabold text-navy"
           >
-            Register free
+            Registration
           </Link>
         </div>
       ) : null}

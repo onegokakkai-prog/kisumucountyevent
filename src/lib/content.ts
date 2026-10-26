@@ -99,7 +99,7 @@ export type SiteContent = {
     account: string;
     instructions: string;
   };
-  register: { title: string; body: string };
+  register: { fee: string; title: string; body: string };
   stats: { show: boolean; minRegistrations: number; eyebrow: string; title: string; body: string };
   // Registration form wording and which optional parts are shown.
   formFields: {
@@ -262,6 +262,7 @@ export const defaultContent: SiteContent = {
     body: "Live numbers from registrations so far. Register to add yourself.",
   },
   register: {
+    fee: "Details to be shared",
     title: "Plan your visit",
     body: "Two minutes. Tell us who you are and what you're coming for, and we'll be in touch with your entry details.",
   },

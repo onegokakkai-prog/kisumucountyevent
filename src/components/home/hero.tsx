@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { getContent } from "@/lib/content";
 import { festival as festivalInfo } from "@/lib/festival";
@@ -7,43 +8,25 @@ import { SiteHeader } from "../site-header";
 import { Container } from "../ui";
 import { VoiceoverPlayer } from "./voiceover-player";
 
-function LakeSunrise() {
-  return (
-    <svg
-      aria-hidden="true"
-      focusable="false"
-      viewBox="0 0 1440 480"
-      preserveAspectRatio="xMidYMax slice"
-      className="absolute inset-x-0 bottom-0 h-[480px] w-full"
-    >
-      <g className="max-lg:translate-x-[-150px] max-lg:translate-y-[90px]">
-        <circle cx="1120" cy="250" r="170" className="fill-sun" />
-        <g className="stroke-sun max-lg:hidden" strokeWidth="6" strokeLinecap="round" opacity="0.55">
-          <line x1="1120" y1="40" x2="1120" y2="0" />
-          <line x1="965" y1="100" x2="935" y2="70" />
-          <line x1="1275" y1="100" x2="1305" y2="70" />
-          <line x1="900" y1="245" x2="855" y2="245" />
-          <line x1="1340" y1="245" x2="1385" y2="245" />
-        </g>
-      </g>
-      <path
-        d="M0 290 C120 262 240 262 360 290 S600 318 720 290 960 262 1080 290 1320 318 1440 290 V480 H0Z"
-        className="fill-lake"
-      />
-      <path
-        d="M0 350 C120 322 240 322 360 350 S600 378 720 350 960 322 1080 350 1320 378 1440 350 V480 H0Z"
-        className="fill-lake-2"
-      />
-      <path
-        d="M0 410 C120 382 240 382 360 410 S600 438 720 410 960 382 1080 410 1320 438 1440 410 V480 H0Z"
-        className="fill-lake-3"
-      />
-    </svg>
-  );
+// The festival banner's illustrations, placed around the centred headline on wide screens.
+const doodles = [
+  { src: "/hero/pencil.webp", width: 308, height: 247, className: "top-0 left-[17%] w-[7.5%] max-w-[150px]" },
+  { src: "/hero/globe-cap.webp", width: 464, height: 487, className: "top-[16%] left-[4.5%] w-[11.5%] max-w-[230px]" },
+  { src: "/hero/outline-cap.webp", width: 412, height: 336, className: "top-[52%] left-[6%] w-[10%] max-w-[205px]" },
+  { src: "/hero/calculator.webp", width: 462, height: 478, className: "top-[18%] right-[5%] w-[11.5%] max-w-[230px]" },
+  { src: "/hero/book.webp", width: 504, height: 441, className: "top-[56%] right-[4%] w-[12.5%] max-w-[250px]" },
+];
+
+// "Dala ka Dala, Gweng ka Gweng: Igniting …" -> the Dholuo line on its own, then the rest.
+function splitTheme(theme: string) {
+  const colon = theme.indexOf(":");
+  if (colon === -1) return { lead: "", rest: theme };
+  return { lead: theme.slice(0, colon + 1), rest: theme.slice(colon + 1).trim() };
 }
 
 export async function Hero() {
   const { festival, voiceover } = await getContent();
+  const theme = splitTheme(festival.theme);
   const facts = [
     { term: "When", value: festival.dateLabel, note: festival.dateDetail },
     { term: "Where", value: festival.venue, note: festivalInfo.location },
@@ -54,26 +37,35 @@ export async function Hero() {
   return (
     <header data-hero className="bg-navy text-white">
       <FestivalBand className="relative z-20" />
+      <div className="relative z-10">
+        <SiteHeader name={festival.name} />
+      </div>
+
       <div className="relative overflow-hidden">
-        <LakeSunrise />
-        <div className="relative z-10">
-          <SiteHeader name={festival.name} />
+        <div aria-hidden="true" className="max-lg:hidden">
+          {doodles.map((d) => (
+            <Image key={d.src} src={d.src} alt="" width={d.width} height={d.height} priority className={`absolute h-auto ${d.className}`} />
+          ))}
         </div>
 
-        <Container className="relative pt-12 pb-[250px] sm:pt-[72px]">
-        <div className="flex max-w-[720px] flex-col gap-6 sm:gap-7">
-          <p className="flex flex-wrap items-center gap-x-3.5 gap-y-2 text-[13px] font-semibold tracking-[0.04em] text-sun uppercase sm:text-[15px]">
-            <span>{festival.dateLabel}</span>
-            <span aria-hidden="true">·</span>
-            <span>{festivalInfo.durationLabel}</span>
-            <span aria-hidden="true">·</span>
-            <span>{festival.venue}</span>
-          </p>
-          <h1 className="font-display text-[clamp(46px,7vw,92px)] leading-[0.95] font-extrabold tracking-[-0.03em] text-balance">
+        <Container className="relative flex flex-col items-center pt-10 pb-6 text-center sm:pt-16">
+          <h1 className="max-w-[16ch] font-display text-[clamp(42px,5.8vw,96px)] leading-[0.98] font-extrabold tracking-[-0.02em] text-balance">
             {festival.name}
           </h1>
-          <p className="max-w-[620px] text-[clamp(17px,2vw,22px)] leading-normal text-[#e3ebf2]">{festival.theme}</p>
-          <div className="flex flex-wrap gap-3.5">
+          <p className="mt-6 flex max-w-[860px] flex-col gap-3 sm:mt-8">
+            {theme.lead ? (
+              <span className="font-display text-[clamp(24px,3vw,48px)] leading-tight font-medium">{theme.lead}</span>
+            ) : null}
+            <span className="text-[clamp(17px,1.7vw,27px)] leading-snug font-semibold text-balance">{theme.rest}</span>
+          </p>
+          <span aria-hidden="true" className="mt-8 h-1.5 w-28 rounded-full bg-white sm:mt-10" />
+          <p className="mt-6 flex flex-col gap-1.5 text-[clamp(17px,1.7vw,27px)] font-semibold sm:mt-8">
+            <span>{festival.dateLabel}</span>
+            <span>
+              <span className="text-sun">Venue:</span> {festival.venue}
+            </span>
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3.5">
             <Link
               href="/#register"
               className="inline-flex min-h-[52px] items-center gap-2.5 rounded-full bg-sun px-7 text-[17px] font-bold text-navy transition-colors hover:brightness-105"
@@ -88,14 +80,28 @@ export async function Hero() {
               See the 2-day programme
             </a>
           </div>
-          {voiceover.src ? <VoiceoverPlayer {...voiceover} /> : null}
-        </div>
+          {voiceover.src ? (
+            <div className="mt-6 flex w-full justify-center">
+              <VoiceoverPlayer {...voiceover} />
+            </div>
+          ) : null}
         </Container>
+
+        {/* Hills and Lake Victoria from the festival banner; the sky is the navy behind it. */}
+        <Image
+          src="/hero/landscape.webp"
+          alt=""
+          width={2400}
+          height={522}
+          sizes="100vw"
+          priority
+          className="relative -mt-[3vw] block h-auto min-h-[150px] w-full object-cover object-[22%_50%]"
+        />
       </div>
 
       <div className="relative bg-white text-ink">
         <Container>
-          <dl className="relative -mt-16 grid overflow-hidden rounded-[20px] bg-white shadow-[0_20px_50px_rgba(11,36,64,0.16)] sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="relative -mt-8 grid sm:-mt-12 lg:-mt-16 overflow-hidden rounded-[20px] bg-white shadow-[0_20px_50px_rgba(11,36,64,0.16)] sm:grid-cols-2 lg:grid-cols-4">
             {facts.map((f, i) => (
               <div
                 key={f.term}

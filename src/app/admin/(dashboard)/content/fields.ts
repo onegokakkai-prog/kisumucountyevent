@@ -373,6 +373,12 @@ export const formSections: SectionConfig[] = [
     title: "Heading",
     description: "The heading and paragraph above the registration form.",
     fields: [
+      {
+        key: "fee",
+        label: "Registration fee",
+        type: "text",
+        help: "Shown as “Registration · …” above the heading and under Festival details, e.g. Details to be shared, Free, or KES 500.",
+      },
       { key: "title", label: "Heading", type: "text" },
       { key: "body", label: "Paragraph", type: "textarea" },
     ],

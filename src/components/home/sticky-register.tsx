@@ -39,7 +39,7 @@ export function StickyRegister({ name, year, dateLabel, venue }: { name: string;
           href="/#register"
           className="inline-flex min-h-11 flex-none items-center gap-2 rounded-full bg-sun px-5 text-[15px] font-bold text-navy transition-colors duration-150 hover:brightness-105"
         >
-          Register<span className="max-sm:sr-only"> free</span>
+          Registration
           <Icon name="arrow-right" size={16} strokeWidth={2.4} />
         </Link>
       </div>
