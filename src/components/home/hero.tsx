@@ -8,13 +8,39 @@ import { SiteHeader } from "../site-header";
 import { Container } from "../ui";
 import { VoiceoverPlayer } from "./voiceover-player";
 
-// The festival banner's illustrations, placed around the centred headline on wide screens.
+// The festival banner's illustrations around the centred headline. Below lg they sit beside
+// the headline text itself, smaller; from lg they spread across the whole hero.
 const doodles = [
-  { src: "/hero/pencil.webp", width: 308, height: 247, className: "top-0 left-[17%] w-[7.5%] max-w-[150px]" },
-  { src: "/hero/globe-cap.webp", width: 464, height: 487, className: "top-[16%] left-[4.5%] w-[11.5%] max-w-[230px]" },
-  { src: "/hero/outline-cap.webp", width: 412, height: 336, className: "top-[52%] left-[6%] w-[10%] max-w-[205px]" },
-  { src: "/hero/calculator.webp", width: 462, height: 478, className: "top-[18%] right-[5%] w-[11.5%] max-w-[230px]" },
-  { src: "/hero/book.webp", width: 504, height: 441, className: "top-[56%] right-[4%] w-[12.5%] max-w-[250px]" },
+  {
+    src: "/hero/pencil.webp",
+    width: 308,
+    height: 247,
+    className: "-top-[9%] left-[2%] w-[11%] lg:top-0 lg:left-[17%] lg:w-[7.5%] lg:max-w-[150px]",
+  },
+  {
+    src: "/hero/globe-cap.webp",
+    width: 464,
+    height: 487,
+    className: "top-[26%] left-0 w-[16%] lg:top-[16%] lg:left-[4.5%] lg:w-[11.5%] lg:max-w-[230px]",
+  },
+  {
+    src: "/hero/outline-cap.webp",
+    width: 412,
+    height: 336,
+    className: "top-[68%] left-0 w-[15%] lg:top-[52%] lg:left-[6%] lg:w-[10%] lg:max-w-[205px]",
+  },
+  {
+    src: "/hero/calculator.webp",
+    width: 462,
+    height: 478,
+    className: "top-[24%] right-0 w-[16%] lg:top-[18%] lg:right-[5%] lg:w-[11.5%] lg:max-w-[230px]",
+  },
+  {
+    src: "/hero/book.webp",
+    width: 504,
+    height: 441,
+    className: "top-[62%] right-0 w-[17%] lg:top-[56%] lg:right-[4%] lg:w-[12.5%] lg:max-w-[250px]",
+  },
 ];
 
 // "Dala ka Dala, Gweng ka Gweng: Igniting …" -> the Dholuo line on its own, then the rest.
@@ -42,46 +68,48 @@ export async function Hero() {
       </div>
 
       <div className="relative overflow-hidden">
-        <div aria-hidden="true" className="max-lg:hidden">
-          {doodles.map((d) => (
-            <Image key={d.src} src={d.src} alt="" width={d.width} height={d.height} priority className={`absolute h-auto ${d.className}`} />
-          ))}
-        </div>
-
-        <Container className="relative flex flex-col items-center pt-10 pb-6 text-center sm:pt-16">
-          <h1 className="max-w-[16ch] font-display text-[clamp(42px,5.8vw,96px)] leading-[0.98] font-extrabold tracking-[-0.02em] text-balance">
-            {festival.name}
-          </h1>
-          <p className="mt-6 flex max-w-[860px] flex-col gap-3 sm:mt-8">
-            {theme.lead ? (
-              <span className="font-display text-[clamp(24px,3vw,48px)] leading-tight font-medium">{theme.lead}</span>
-            ) : null}
-            <span className="text-[clamp(17px,1.7vw,27px)] leading-snug font-semibold text-balance">{theme.rest}</span>
-          </p>
-          <span aria-hidden="true" className="mt-8 h-1.5 w-28 rounded-full bg-white sm:mt-10" />
-          <p className="mt-6 flex flex-col gap-1.5 text-[clamp(17px,1.7vw,27px)] font-semibold sm:mt-8">
-            <span>{festival.dateLabel}</span>
-            <span>
-              <span className="text-sun">Venue:</span> {festival.venue}
-            </span>
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3.5">
+        <Container className="flex flex-col items-center pt-12 pb-6 text-center sm:pt-16">
+          {/* Positions the illustrations below lg; from lg they use the whole hero instead. */}
+          <div className="relative flex w-full flex-col items-center px-[17%] lg:static lg:px-0">
+            <div aria-hidden="true">
+              {doodles.map((d) => (
+                <Image key={d.src} src={d.src} alt="" width={d.width} height={d.height} priority className={`absolute h-auto ${d.className}`} />
+              ))}
+            </div>
+            <h1 className="relative max-w-[16ch] font-display text-[clamp(26px,5.8vw,96px)] leading-[0.98] font-extrabold tracking-[-0.02em] text-balance">
+              {festival.name}
+            </h1>
+            <p className="relative mt-4 flex max-w-[860px] flex-col gap-2 sm:mt-8 sm:gap-3">
+              {theme.lead ? (
+                <span className="font-display text-[clamp(18px,3vw,48px)] leading-tight font-medium text-balance">{theme.lead}</span>
+              ) : null}
+              <span className="text-[clamp(13px,1.7vw,27px)] leading-snug font-semibold text-balance">{theme.rest}</span>
+            </p>
+            <span aria-hidden="true" className="relative mt-5 h-1 w-16 rounded-full bg-white sm:mt-10 sm:h-1.5 sm:w-28" />
+            <p className="relative mt-4 flex flex-col gap-1 text-[clamp(14px,1.7vw,27px)] font-semibold sm:mt-8 sm:gap-1.5">
+              <span>{festival.dateLabel}</span>
+              <span>
+                <span className="text-sun">Venue:</span> {festival.venue}
+              </span>
+            </p>
+          </div>
+          <div className="relative mt-7 flex flex-wrap justify-center gap-2.5 sm:mt-8 sm:gap-3.5">
             <Link
               href="/#register"
-              className="inline-flex min-h-[52px] items-center gap-2.5 rounded-full bg-sun px-7 text-[17px] font-bold text-navy transition-colors hover:brightness-105"
+              className="inline-flex min-h-11 items-center gap-2 rounded-full bg-sun px-5 text-[15px] font-bold text-navy transition-colors hover:brightness-105 sm:min-h-[52px] sm:gap-2.5 sm:px-7 sm:text-[17px]"
             >
               Register to attend
               <Icon name="arrow-right" size={18} strokeWidth={2.5} />
             </Link>
             <a
               href="#programme"
-              className="inline-flex min-h-[52px] items-center rounded-full border-2 border-white/55 px-7 text-[17px] font-semibold text-white transition-colors hover:border-white hover:bg-white/10"
+              className="inline-flex min-h-11 items-center rounded-full border-2 border-white/55 px-5 text-[15px] font-semibold text-white transition-colors hover:border-white hover:bg-white/10 sm:min-h-[52px] sm:px-7 sm:text-[17px]"
             >
               See the 2-day programme
             </a>
           </div>
           {voiceover.src ? (
-            <div className="mt-6 flex w-full justify-center">
+            <div className="relative mt-6 flex w-full justify-center">
               <VoiceoverPlayer {...voiceover} />
             </div>
           ) : null}
