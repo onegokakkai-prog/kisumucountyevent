@@ -16,6 +16,8 @@ export function VoiceoverPlayer(voiceover: { src: string; title: string; duratio
   const [started, setStarted] = useState(false);
   const [current, setCurrent] = useState(0);
   const [duration, setDuration] = useState(0);
+  // A live stream reports an endless duration.
+  const [live, setLive] = useState(false);
 
   function toggle() {
     const audio = audioRef.current;
@@ -40,29 +42,36 @@ export function VoiceoverPlayer(voiceover: { src: string; title: string; duratio
       </button>
       <div className="flex min-w-0 flex-1 flex-col gap-1">
         <span className="truncate text-[15px] font-semibold text-white">{voiceover.title}</span>
-        <div className="flex items-center gap-3">
-          <input
-            type="range"
-            min={0}
-            max={duration || 1}
-            step={0.1}
-            value={current}
-            disabled={!started}
-            onChange={(e) => {
-              const audio = audioRef.current;
-              if (!audio) return;
-              audio.currentTime = Number(e.target.value);
-              setCurrent(audio.currentTime);
-            }}
-            aria-label="Seek"
-            aria-valuetext={`${formatTime(current)} of ${formatTime(duration)}`}
-            style={{ "--progress": `${duration ? (current / duration) * 100 : 0}%` } as React.CSSProperties}
-            className="voiceover-range h-1 min-w-0 flex-1 cursor-pointer appearance-none rounded-full bg-[linear-gradient(to_right,var(--color-sun)_var(--progress),rgb(255_255_255/0.25)_var(--progress))] disabled:cursor-default"
-          />
-          <span className="flex-none text-[13px] text-haze tabular-nums">
-            {started ? `${formatTime(current)} / ${formatTime(duration)}` : voiceover.duration}
+        {live ? (
+          <span className="flex items-center gap-2 text-[13px] font-semibold text-haze">
+            <span aria-hidden="true" className={`size-2 rounded-full ${playing ? "bg-coral" : "bg-white/40"}`} />
+            Live{started ? ` · ${formatTime(current)}` : ""}
           </span>
-        </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <input
+              type="range"
+              min={0}
+              max={duration || 1}
+              step={0.1}
+              value={current}
+              disabled={!started}
+              onChange={(e) => {
+                const audio = audioRef.current;
+                if (!audio) return;
+                audio.currentTime = Number(e.target.value);
+                setCurrent(audio.currentTime);
+              }}
+              aria-label="Seek"
+              aria-valuetext={`${formatTime(current)} of ${formatTime(duration)}`}
+              style={{ "--progress": `${duration ? (current / duration) * 100 : 0}%` } as React.CSSProperties}
+              className="voiceover-range h-1 min-w-0 flex-1 cursor-pointer appearance-none rounded-full bg-[linear-gradient(to_right,var(--color-sun)_var(--progress),rgb(255_255_255/0.25)_var(--progress))] disabled:cursor-default"
+            />
+            <span className="flex-none text-[13px] text-haze tabular-nums">
+              {started ? `${formatTime(current)} / ${formatTime(duration)}` : voiceover.duration}
+            </span>
+          </div>
+        )}
       </div>
       <audio
         ref={audioRef}
@@ -71,7 +80,11 @@ export function VoiceoverPlayer(voiceover: { src: string; title: string; duratio
         onPlay={() => setPlaying(true)}
         onPause={() => setPlaying(false)}
         onEnded={() => setPlaying(false)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
+        onLoadedMetadata={(e) => {
+          const length = e.currentTarget.duration;
+          setLive(!Number.isFinite(length));
+          setDuration(Number.isFinite(length) ? length : 0);
+        }}
         onTimeUpdate={(e) => setCurrent(e.currentTarget.currentTime)}
       />
     </div>

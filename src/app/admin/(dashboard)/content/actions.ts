@@ -4,7 +4,8 @@ import { updateTag } from "next/cache";
 import { z } from "zod";
 import { requireAdmin } from "@/lib/admin-auth";
 import { defaultContent, resetContentSection, saveContentSection, type ContentSection } from "@/lib/content";
-import { createUploadUrl, uploadKinds, type UploadKind } from "@/lib/r2";
+import { uploadContentType, uploadKinds, type UploadKind } from "@/lib/media-types";
+import { createUploadUrl } from "@/lib/r2";
 import { choiceTypes } from "@/lib/form-questions";
 import { formSections, proSections, sections, slotFields, type Field, type ItemField } from "./fields";
 
@@ -139,16 +140,19 @@ export async function resetSection(section: ContentSection) {
   updateTag("content");
 }
 
-export async function getUploadUrl(kind: UploadKind, fileName: string, contentType: string, size: number) {
+export async function getUploadUrl(kind: UploadKind, fileName: string, fileType: string, size: number) {
   await requireAdmin();
   const rules = uploadKinds[kind];
   if (!rules) return { error: "Unsupported upload." } as const;
+  const contentType = uploadContentType(kind, fileName, fileType);
   if (!(rules.types as readonly string[]).includes(contentType)) {
-    return { error: kind === "image" ? "Use a JPG, PNG, WebP or AVIF image." : "Use an MP3, M4A, WAV, OGG or WebM recording." } as const;
+    return {
+      error: kind === "image" ? "Use a JPG, PNG, WebP or AVIF image." : "Use an MP3/MPEG, M4A, AAC, WAV, OGG or WebM recording.",
+    } as const;
   }
   if (size > rules.maxBytes) return { error: `That file is too big. The limit is ${rules.maxBytes / 1024 / 1024} MB.` } as const;
   try {
-    return await createUploadUrl(kind, fileName, contentType);
+    return { ...(await createUploadUrl(kind, fileName, contentType)), contentType };
   } catch (err) {
     console.error("Failed to sign upload", err);
     return { error: "Uploads aren't set up yet. Add the R2 settings to the environment." } as const;

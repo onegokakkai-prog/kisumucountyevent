@@ -1,16 +1,12 @@
 import "server-only";
 import { AwsClient } from "aws4fetch";
+import type { UploadKind } from "./media-types";
 
 // Uploads go straight from the admin's browser to Cloudflare R2 with a short-lived signed
 // URL, so large photos and recordings never pass through (or hit the body limit of) our
 // server functions. The bucket needs a CORS rule allowing PUT from the site's origin.
-
-export const uploadKinds = {
-  image: { types: ["image/jpeg", "image/png", "image/webp", "image/avif"], maxBytes: 10 * 1024 * 1024 },
-  audio: { types: ["audio/mpeg", "audio/mp4", "audio/x-m4a", "audio/wav", "audio/x-wav", "audio/ogg", "audio/webm"], maxBytes: 30 * 1024 * 1024 },
-} as const;
-
-export type UploadKind = keyof typeof uploadKinds;
+// Recordings stream from the public URL: R2 answers range requests, so playback starts
+// straight away and listeners can skip ahead without downloading the whole file.
 
 function config() {
   const { R2_ACCOUNT_ID, R2_ACCESS_KEY_ID, R2_SECRET_ACCESS_KEY, R2_BUCKET, R2_PUBLIC_URL } = process.env;

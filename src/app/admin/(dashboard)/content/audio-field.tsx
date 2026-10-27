@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { audioAccept } from "@/lib/media-types";
 import { secondaryButtonClass } from "../admin-ui";
 import { uploadFile } from "./upload";
 
@@ -10,16 +11,18 @@ function formatDuration(seconds: number) {
 }
 
 // Reads a recording's length in the browser so the player can show it before anything loads.
+// null means this browser can't play it, so visitors' browsers likely can't either.
 function readDuration(file: File) {
-  return new Promise<string>((resolve) => {
+  return new Promise<string | null>((resolve) => {
     const audio = new Audio();
     const url = URL.createObjectURL(file);
-    audio.preload = "metadata";
-    audio.onloadedmetadata = () => {
-      resolve(Number.isFinite(audio.duration) ? formatDuration(audio.duration) : "");
+    const done = (value: string | null) => {
       URL.revokeObjectURL(url);
+      resolve(value);
     };
-    audio.onerror = () => resolve("");
+    audio.preload = "metadata";
+    audio.onloadedmetadata = () => done(Number.isFinite(audio.duration) ? formatDuration(audio.duration) : "");
+    audio.onerror = () => done(null);
     audio.src = url;
   });
 }
@@ -33,10 +36,14 @@ export function AudioField({ name, initial, initialDuration }: { name: string; i
 
   async function upload(file: File) {
     setError(null);
+    const length = await readDuration(file);
+    if (length === null) {
+      setError("This recording can't be played in web browsers. Export or convert it to MP3, then upload it again.");
+      return;
+    }
     setProgress(0);
     try {
-      const [url, length] = await Promise.all([uploadFile("audio", file, setProgress), readDuration(file)]);
-      setSrc(url);
+      setSrc(await uploadFile("audio", file, setProgress));
       setDuration(length);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed.");
@@ -69,11 +76,26 @@ export function AudioField({ name, initial, initialDuration }: { name: string; i
         </div>
       ) : null}
       {error ? <p className="text-sm font-semibold text-rust">{error}</p> : null}
+      <label className="flex flex-col gap-1 text-sm font-semibold">
+        Or play from a link
+        <input
+          type="url"
+          inputMode="url"
+          placeholder="https://… (an MP3 file or a live audio stream)"
+          value={src}
+          onChange={(e) => {
+            setSrc(e.target.value.trim());
+            setDuration("");
+          }}
+          className="min-h-11 w-full rounded-xl border-[1.5px] border-line-strong bg-white px-3 py-2 text-[15px] font-normal focus:border-navy focus:outline-3 focus:outline-offset-1 focus:outline-sun"
+        />
+        <span className="font-normal text-muted">Uploading fills this in for you. A live stream shows as “Live” with no seek bar.</span>
+      </label>
       <div className="flex flex-wrap gap-2">
         <input
           ref={fileRef}
           type="file"
-          accept="audio/*"
+          accept={audioAccept}
           hidden
           onChange={(e) => {
             const file = e.target.files?.[0];
