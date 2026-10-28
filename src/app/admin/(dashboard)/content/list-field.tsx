@@ -154,7 +154,7 @@ function ItemInput({ field, value, onChange }: { field: ItemField; value: string
   );
 }
 
-function ImageInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+export function ImageInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   const [progress, setProgress] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);

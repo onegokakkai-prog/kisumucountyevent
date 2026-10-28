@@ -98,6 +98,11 @@ export type SiteContent = {
     paybill: string;
     account: string;
     instructions: string;
+    // The school as it is now beside a picture of the block being built.
+    todayPhoto: string;
+    todayLabel: string;
+    plannedPhoto: string;
+    plannedLabel: string;
   };
   register: { fee: string; title: string; body: string };
   stats: { show: boolean; minRegistrations: number; eyebrow: string; title: string; body: string };
@@ -253,6 +258,10 @@ export const defaultContent: SiteContent = {
     account: "BRICK",
     instructions:
       "Go to M-Pesa and choose Lipa na M-Pesa, then Pay Bill.\nEnter the business number and account shown here.\nEnter the amount you pledged and your M-Pesa PIN.\nKeep the confirmation SMS; the festival team will confirm your brick.",
+    todayPhoto: "/brick/today.webp",
+    todayLabel: "Grace of Mariatta's classrooms today",
+    plannedPhoto: "/brick/new-block.webp",
+    plannedLabel: "The new block your brick helps build",
   },
   stats: {
     show: true,

@@ -81,6 +81,7 @@ function readField(field: Field, formData: FormData): unknown {
     case "photos":
       return photosSchema.parse(JSON.parse(text || "[]"));
     case "audio":
+    case "image":
       return url.parse(text);
     case "list":
       return readList(text, field.item, field.max, field.itemName);

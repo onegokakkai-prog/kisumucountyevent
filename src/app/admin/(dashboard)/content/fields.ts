@@ -17,7 +17,7 @@ export type ItemField = {
 };
 
 export type Field =
-  | { key: string; label: string; type: "text" | "textarea" | "color"; help?: string }
+  | { key: string; label: string; type: "text" | "textarea" | "color" | "image"; help?: string }
   | { key: string; label: string; type: "toggle"; help?: string }
   | { key: string; label: string; type: "number"; optional?: boolean; help?: string }
   | { key: string; label: string; type: "lines"; help?: string }
@@ -303,6 +303,10 @@ export const sections: SectionConfig[] = [
       { key: "paybill", label: "M-Pesa Paybill number", type: "text", help: "Leave empty until the Paybill is ready." },
       { key: "account", label: "Account number", type: "text" },
       { key: "instructions", label: "How to pay", type: "lines", help: "One step per line." },
+      { key: "todayPhoto", label: "Photo: the school today", type: "image", help: "Shown beside the new block. Remove both photos to hide them." },
+      { key: "todayLabel", label: "Caption: the school today", type: "text" },
+      { key: "plannedPhoto", label: "Photo: the new block", type: "image", help: "An architect's drawing or artist's impression." },
+      { key: "plannedLabel", label: "Caption: the new block", type: "text" },
     ],
   },
   {

@@ -7,6 +7,7 @@ import { buttonClass } from "../admin-ui";
 import { resetSection, saveSection, type SaveState } from "./actions";
 import { AudioField } from "./audio-field";
 import type { Field, SectionConfig } from "./fields";
+import { ImageField } from "./image-field";
 import { ListField } from "./list-field";
 import { PhotosField } from "./photos-field";
 import { ProgrammeField } from "./programme-field";
@@ -99,6 +100,15 @@ function FieldInput({ section, field, values }: { section: ContentSection; field
         <span className="text-[15px] font-semibold">{field.label}</span>
         {help}
         <AudioField name={field.key} initial={String(value ?? "")} initialDuration={String(values.duration ?? "")} />
+      </div>
+    );
+  }
+  if (field.type === "image") {
+    return (
+      <div className="flex flex-col gap-2">
+        <span className="text-[15px] font-semibold">{field.label}</span>
+        {help}
+        <ImageField name={field.key} initial={String(value ?? "")} />
       </div>
     );
   }

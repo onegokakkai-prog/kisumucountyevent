@@ -368,6 +368,40 @@ export async function BuyABrick() {
             </>
           )}
         </div>
+        {brick.todayPhoto && brick.plannedPhoto ? (
+          <div className="relative grid w-full gap-4 sm:grid-cols-[2fr_3fr] sm:gap-5">
+            <figure className="flex flex-col gap-2.5">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[20px] bg-white/40">
+                <Image src={brick.todayPhoto} alt={brick.todayLabel || "The school today"} fill sizes="(min-width: 640px) 40vw, 100vw" className="object-cover" />
+                <span className="absolute top-3 left-3 rounded-full bg-navy px-3 py-1 text-[13px] font-bold tracking-wide text-white uppercase">
+                  Today
+                </span>
+              </div>
+              {brick.todayLabel ? <figcaption className="text-[15px] font-semibold">{brick.todayLabel}</figcaption> : null}
+            </figure>
+            <span
+              aria-hidden="true"
+              className="z-10 mx-auto -my-1 flex size-12 rotate-90 items-center justify-center rounded-full bg-navy text-2xl font-bold text-sun ring-4 ring-sun sm:absolute sm:top-[calc(50%-24px-14px)] sm:left-[40%] sm:my-0 sm:-ml-6 sm:rotate-0"
+            >
+              →
+            </span>
+            <figure className="flex flex-col gap-2.5">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[20px] bg-white/40 sm:aspect-auto sm:h-full">
+                <Image
+                  src={brick.plannedPhoto}
+                  alt={brick.plannedLabel || "The planned new block"}
+                  fill
+                  sizes="(min-width: 640px) 60vw, 100vw"
+                  className="object-cover object-[25%_50%] sm:object-center"
+                />
+                <span className="absolute top-3 left-3 rounded-full bg-white px-3 py-1 text-[13px] font-bold tracking-wide text-navy uppercase">
+                  The new block
+                </span>
+              </div>
+              {brick.plannedLabel ? <figcaption className="text-[15px] font-semibold">{brick.plannedLabel}</figcaption> : null}
+            </figure>
+          </div>
+        ) : null}
       </div>
     </section>
   );
