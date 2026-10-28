@@ -261,7 +261,7 @@ export const defaultContent: SiteContent = {
     todayPhoto: "/brick/today.webp",
     todayLabel: "Grace of Mariatta's classrooms today",
     plannedPhoto: "/brick/new-block.webp",
-    plannedLabel: "The new block your brick helps build",
+    plannedLabel: "The new block your bricks help build",
   },
   stats: {
     show: true,
